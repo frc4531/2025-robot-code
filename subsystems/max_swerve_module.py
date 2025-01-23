@@ -1,4 +1,4 @@
-from rev import CANSparkMax, SparkMaxAbsoluteEncoder, CANSparkFlex
+from rev import SparkMax, SparkMaxConfig, SparkFlex, SparkFlexConfig, SparkBase
 from wpimath.geometry import Rotation2d
 from wpimath.kinematics import SwerveModuleState, SwerveModulePosition
 
@@ -18,25 +18,28 @@ class MAXSwerveModule:
         self.chassis_angular_offset = 0
         self.desired_state = SwerveModuleState(0.0, Rotation2d())
 
-        self.driving_spark_flex = CANSparkFlex(
-            driving_can_id, CANSparkFlex.MotorType.kBrushless
+        self.driving_spark_flex = SparkFlex(
+            driving_can_id, SparkFlex.MotorType.kBrushless
         )
-        self.turning_spark_max = CANSparkMax(
-            turning_can_id, CANSparkMax.MotorType.kBrushless
+        self.turning_spark_max = SparkMax(
+            turning_can_id, SparkMax.MotorType.kBrushless
         )
+
+        self.driving_config = SparkFlexConfig()
+        self.turning_config = SparkMaxConfig()
 
         # Factory reset, so we get the SPARKS MAX to a known state before configuring
         # them. This is useful in case a SPARK MAX is swapped out.
-        self.driving_spark_flex.restoreFactoryDefaults()
-        self.turning_spark_max.restoreFactoryDefaults()
+        # self.driving_spark_flex.restoreFactoryDefaults()
+        # self.turning_spark_max.restoreFactoryDefaults()
 
         # Setup encoders and PID controllers for the driving and turning SPARKS MAX.
         self.driving_encoder = self.driving_spark_flex.getEncoder()
         self.turning_encoder = self.turning_spark_max.getAbsoluteEncoder(
-            SparkMaxAbsoluteEncoder.Type.kDutyCycle
+            # SparkMaxAbsoluteEncoder.Type.kDutyCycle
         )
-        self.driving_pid_controller = self.driving_spark_flex.getPIDController()
-        self.turning_pid_controller = self.turning_spark_max.getPIDController()
+        self.driving_pid_controller = self.driving_spark_flex.getClosedLoopController()
+        self.turning_pid_controller = self.turning_spark_max.getClosedLoopController()
         self.driving_pid_controller.setFeedbackDevice(self.driving_encoder)
         self.turning_pid_controller.setFeedbackDevice(self.turning_encoder)
 
@@ -96,19 +99,23 @@ class MAXSwerveModule:
             ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput
         )
 
-        self.driving_spark_flex.setIdleMode(ModuleConstants.kDrivingMotorIdleMode)
-        self.turning_spark_max.setIdleMode(ModuleConstants.kTurningMotorIdleMode)
-        self.driving_spark_flex.setSmartCurrentLimit(
+        self.driving_config.setIdleMode(ModuleConstants.kDrivingMotorIdleMode)
+        self.turning_config.setIdleMode(ModuleConstants.kTurningMotorIdleMode)
+        self.driving_config.setSmartCurrentLimit(
             ModuleConstants.kDrivingMotorCurrentLimit
         )
-        self.turning_spark_max.setSmartCurrentLimit(
+        self.turning_config.setSmartCurrentLimit(
             ModuleConstants.kTurningMotorCurrentLimit
         )
 
         # Save the SPARK MAX configurations. If a SPARK MAX browns out during
         # operation, it will maintain the above configurations.
-        self.driving_spark_flex.burnFlash()
-        self.turning_spark_max.burnFlash()
+        self.driving_spark_flex.configure(self.driving_config,
+                                          SparkBase.ResetMode.kResetSafeParameters,
+                                          SparkBase.PersistMode.kPersistParameters)
+        self.turning_spark_max.configure(self.turning_config,
+                                         SparkBase.ResetMode.kResetSafeParameters,
+                                         SparkBase.PersistMode.kPersistParameters)
 
         self.chassis_angular_offset = chassis_angular_offset
         self.desired_state.angle = Rotation2d(self.turning_encoder.getPosition())
@@ -158,10 +165,10 @@ class MAXSwerveModule:
 
         # Command driving and turning SPARKS MAX towards their respective setpoints.
         self.driving_pid_controller.setReference(
-            optimized_desired_state.speed, CANSparkFlex.ControlType.kVelocity
+            optimized_desired_state.speed, SparkFlex.ControlType.kVelocity
         )
         self.turning_pid_controller.setReference(
-            optimized_desired_state.angle.radians(), CANSparkMax.ControlType.kPosition
+            optimized_desired_state.angle.radians(), SparkMax.ControlType.kPosition
         )
 
         self.desired_state = desired_state
