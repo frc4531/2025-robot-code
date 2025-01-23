@@ -31,8 +31,6 @@ robotpy_extras = [
 requires = [
     "robotpy-commands-v2",
     "robotpy-navx",
-    "phoenix6",
     "pynetworktables",
-    "robotpy-rev",
-    "robotpy-pathplannerlib"
+    "robotpy-rev"
 ]
