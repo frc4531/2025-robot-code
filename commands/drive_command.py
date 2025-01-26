@@ -8,7 +8,7 @@ from constants.swerve_constants import OIConstants
 from subsystems.drive_subsystem import DriveSubsystem
 
 
-class DriveCommand(commands2.CommandBase):
+class DriveCommand(commands2.Command):
 
     def __init__(self, drive_sub: DriveSubsystem) -> None:
         super().__init__()

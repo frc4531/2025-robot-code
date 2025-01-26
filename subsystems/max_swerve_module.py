@@ -1,4 +1,4 @@
-from rev import SparkMax, SparkMaxConfig, SparkFlex, SparkFlexConfig, SparkBase
+from rev import SparkMax, SparkMaxConfig, SparkFlex, SparkFlexConfig, SparkBase, ClosedLoopConfig
 from wpimath.geometry import Rotation2d
 from wpimath.kinematics import SwerveModuleState, SwerveModulePosition
 
@@ -40,71 +40,71 @@ class MAXSwerveModule:
         )
         self.driving_pid_controller = self.driving_spark_flex.getClosedLoopController()
         self.turning_pid_controller = self.turning_spark_max.getClosedLoopController()
-        self.driving_pid_controller.setFeedbackDevice(self.driving_encoder)
-        self.turning_pid_controller.setFeedbackDevice(self.turning_encoder)
+        self.driving_config.closedLoop.setFeedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
+        self.turning_config.closedLoop.setFeedbackSensor(ClosedLoopConfig.FeedbackSensor.kAbsoluteEncoder)
 
         # Apply position and velocity conversion factors for the driving encoder. The
         # native units for position and velocity are rotations and RPM, respectively,
         # but we want meters and meters per second to use with WPILib's swerve APIs.
-        self.driving_encoder.setPositionConversionFactor(
+        self.driving_config.encoder.positionConversionFactor(
             ModuleConstants.kDrivingEncoderPositionFactor
         )
-        self.driving_encoder.setVelocityConversionFactor(
+        self.driving_config.encoder.velocityConversionFactor(
             ModuleConstants.kDrivingEncoderVelocityFactor
         )
 
         # Apply position and velocity conversion factors for the turning encoder. We
         # want these in radians and radians per second to use with WPILib's swerve
         # APIs.
-        self.turning_encoder.setPositionConversionFactor(
+        self.turning_config.absoluteEncoder.positionConversionFactor(
             ModuleConstants.kTurningEncoderPositionFactor
         )
-        self.turning_encoder.setVelocityConversionFactor(
+        self.turning_config.absoluteEncoder.velocityConversionFactor(
             ModuleConstants.kTurningEncoderVelocityFactor
         )
 
         # Invert the turning encoder, since the output shaft rotates in the opposite direction of
         # the steering motor in the MAXSwerve Module.
-        self.turning_encoder.setInverted(ModuleConstants.kTurningEncoderInverted)
+        self.turning_config.absoluteEncoder.inverted(ModuleConstants.kTurningEncoderInverted)
 
         # Enable PID wrap around for the turning motor. This will allow the PID
         # controller to go through 0 to get to the setpoint i.e. going from 350 degrees
         # to 10 degrees will go through 0 rather than the other direction which is a
         # longer route.
-        self.turning_pid_controller.setPositionPIDWrappingEnabled(True)
-        self.turning_pid_controller.setPositionPIDWrappingMinInput(
+        self.turning_config.closedLoop.positionWrappingEnabled(True)
+        self.turning_config.closedLoop.positionWrappingMinInput(
             ModuleConstants.kTurningEncoderPositionPIDMinInput
         )
-        self.turning_pid_controller.setPositionPIDWrappingMaxInput(
+        self.turning_config.closedLoop.positionWrappingMaxInput(
             ModuleConstants.kTurningEncoderPositionPIDMaxInput
         )
 
         # Set the PID gains for the driving motor. Note these are example gains, and you
         # may need to tune them for your own robot!
-        self.driving_pid_controller.setP(ModuleConstants.kDrivingP)
-        self.driving_pid_controller.setI(ModuleConstants.kDrivingI)
-        self.driving_pid_controller.setD(ModuleConstants.kDrivingD)
-        self.driving_pid_controller.setFF(ModuleConstants.kDrivingFF)
-        self.driving_pid_controller.setOutputRange(
+        self.driving_config.closedLoop.P(ModuleConstants.kDrivingP)
+        self.driving_config.closedLoop.I(ModuleConstants.kDrivingI)
+        self.driving_config.closedLoop.D(ModuleConstants.kDrivingD)
+        self.driving_config.closedLoop.velocityFF(ModuleConstants.kDrivingFF)
+        self.driving_config.closedLoop.outputRange(
             ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput
         )
 
         # Set the PID gains for the turning motor. Note these are example gains, and you
         # may need to tune them for your own robot!
-        self.turning_pid_controller.setP(ModuleConstants.kTurningP)
-        self.turning_pid_controller.setI(ModuleConstants.kTurningI)
-        self.turning_pid_controller.setD(ModuleConstants.kTurningD)
-        self.turning_pid_controller.setFF(ModuleConstants.kTurningFF)
-        self.turning_pid_controller.setOutputRange(
+        self.turning_config.closedLoop.P(ModuleConstants.kTurningP)
+        self.turning_config.closedLoop.I(ModuleConstants.kTurningI)
+        self.turning_config.closedLoop.D(ModuleConstants.kTurningD)
+        self.turning_config.closedLoop.velocityFF(ModuleConstants.kTurningFF)
+        self.turning_config.closedLoop.outputRange(
             ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput
         )
 
         self.driving_config.setIdleMode(ModuleConstants.kDrivingMotorIdleMode)
         self.turning_config.setIdleMode(ModuleConstants.kTurningMotorIdleMode)
-        self.driving_config.setSmartCurrentLimit(
+        self.driving_config.smartCurrentLimit(
             ModuleConstants.kDrivingMotorCurrentLimit
         )
-        self.turning_config.setSmartCurrentLimit(
+        self.turning_config.smartCurrentLimit(
             ModuleConstants.kTurningMotorCurrentLimit
         )
 
@@ -159,16 +159,16 @@ class MAXSwerveModule:
         )
 
         # Optimize the reference state to avoid spinning further than 90 degrees.
-        optimized_desired_state = SwerveModuleState.optimize(
-            corrected_desired_state, Rotation2d(self.turning_encoder.getPosition())
+        corrected_desired_state.optimize(
+            Rotation2d(self.turning_encoder.getPosition())
         )
 
         # Command driving and turning SPARKS MAX towards their respective setpoints.
         self.driving_pid_controller.setReference(
-            optimized_desired_state.speed, SparkFlex.ControlType.kVelocity
+            corrected_desired_state.speed, SparkBase.ControlType.kVelocity
         )
         self.turning_pid_controller.setReference(
-            optimized_desired_state.angle.radians(), SparkMax.ControlType.kPosition
+            corrected_desired_state.angle.radians(), SparkBase.ControlType.kPosition
         )
 
         self.desired_state = desired_state
