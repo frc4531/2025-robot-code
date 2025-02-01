@@ -17,3 +17,8 @@ class LiftSubsystem(SubsystemBase):
     def set_lift_speed(self, speed):
         self.left_lift_motor.set(speed)
         self.right_lift_motor.set(speed)
+
+    def get_distance(self):
+        """
+        insert LaserCanHere
+        """

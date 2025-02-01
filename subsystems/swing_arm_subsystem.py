@@ -11,7 +11,10 @@ class SwingArmSubsystem(SubsystemBase):
 
         self.swing_arm_motor = rev.SparkFlex(3, rev.SparkFlex.MotorType.kBrushless)
 
-        self.swing_arm_abs_encoder = self.swing_arm_motor.getExternalEncoder()
+        self.swing_arm_abs_encoder = self.swing_arm_motor.getAbsoluteEncoder()
 
     def set_swing_arm_speed(self, speed):
         self.swing_arm_motor.set(speed)
+
+    def get_swing_arm_position(self):
+        return self.swing_arm_abs_encoder

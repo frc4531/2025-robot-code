@@ -11,7 +11,10 @@ class WristSubsystem(SubsystemBase):
 
         self.wrist_motor = rev.SparkFlex(4, rev.SparkFlex.MotorType.kBrushless)
 
-        self.wrist_abs_encoder = self.wrist_motor.getExternalEncoder()
+        self.wrist_abs_encoder = self.wrist_motor.getAbsoluteEncoder()
 
     def set_wrist_speed(self, speed):
         self.wrist_motor.set(speed)
+
+    def get_wrist_position(self):
+        return self.wrist_abs_encoder
