@@ -7,6 +7,7 @@
 
 import commands2
 import wpilib
+import libgrapplefrc
 
 from robot_container import RobotContainer
 

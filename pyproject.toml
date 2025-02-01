@@ -32,5 +32,6 @@ requires = [
     "robotpy-commands-v2",
     "robotpy-navx",
     "pynetworktables",
-    "robotpy-rev"
+    "robotpy-rev",
+    "libgrapplefrc-py"
 ]

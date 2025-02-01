@@ -9,9 +9,12 @@ from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.trajectory import TrajectoryConfig, TrajectoryGenerator
 
 from commands.drive_command import DriveCommand
+from commands.lift_down import LiftDown
+from commands.lift_up import LiftUp
 from constants.swerve_constants import OIConstants, AutoConstants, DriveConstants
 from subsystems.drive_subsystem import DriveSubsystem
 from subsystems.vision_subsystem import VisionSubsystem
+from subsystems.lift_subsystem import LiftSubsystem
 
 
 class RobotContainer:
@@ -26,9 +29,11 @@ class RobotContainer:
         # The robot's subsystems
         self.drive_subsystem = DriveSubsystem()
         self.vision_subsystem = VisionSubsystem()
+        self.lift_subsystem = LiftSubsystem()
 
         # The driver's controller
         self.driver_controller = wpilib.Joystick(OIConstants.kDriverControllerPort)
+        self.operator_controller = wpilib.Joystick(OIConstants.kOperatorControllerPort)
 
         # Configure the button bindings
         self.configure_button_bindings()
@@ -45,6 +50,12 @@ class RobotContainer:
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
+        commands2.button.JoystickButton(self.operator_controller, 1).whileTrue(
+            LiftUp(self.lift_subsystem)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 2).whileTrue(
+            LiftDown(self.lift_subsystem)
+        )
 
     def disable_pid_subsystems(self) -> None:
         """Disables all ProfiledPIDSubsystem and PIDSubsystem instances.

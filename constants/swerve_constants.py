@@ -127,6 +127,8 @@ class OIConstants:
     kDriverControllerPort = 0
     kDriveDeadband = 0.05
 
+    kOperatorControllerPort = 1
+
 
 class AutoConstants:
     kMaxSpeedMetersPerSecond = 3
