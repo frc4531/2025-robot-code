@@ -10,6 +10,7 @@ from wpimath.trajectory import TrajectoryConfig, TrajectoryGenerator
 
 from commands.drive_command import DriveCommand
 from commands.lift_down import LiftDown
+from commands.lift_to_position import LiftToPosition
 from commands.lift_up import LiftUp
 from constants.swerve_constants import OIConstants, AutoConstants, DriveConstants
 from subsystems.drive_subsystem import DriveSubsystem
@@ -44,6 +45,7 @@ class RobotContainer:
         )
 
 
+
     def configure_button_bindings(self) -> None:
         """
         Use this method to define your button->command mappings. Buttons can be created by
@@ -51,10 +53,13 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
         commands2.button.JoystickButton(self.operator_controller, 1).whileTrue(
-            LiftUp(self.lift_subsystem)
+            LiftDown(self.lift_subsystem)
         )
         commands2.button.JoystickButton(self.operator_controller, 2).whileTrue(
-            LiftDown(self.lift_subsystem)
+            LiftUp(self.lift_subsystem)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
+            LiftToPosition(self.lift_subsystem, 0.4)
         )
 
     def disable_pid_subsystems(self) -> None:

@@ -3,7 +3,7 @@ import commands2
 from subsystems.intake_subsystem import IntakeSubsystem
 
 
-class IntakeDown(commands2.Command):
+class IntakeOut(commands2.Command):
 
     def __init__(self, intake_sub: IntakeSubsystem) -> None:
         super().__init__()

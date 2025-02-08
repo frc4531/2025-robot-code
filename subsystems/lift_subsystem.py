@@ -1,6 +1,7 @@
 import rev
 import wpilib
 from commands2 import SubsystemBase
+from libgrapplefrc import LaserCAN
 
 
 class LiftSubsystem(SubsystemBase):
@@ -14,11 +15,20 @@ class LiftSubsystem(SubsystemBase):
 
         self.right_lift_motor.setInverted(True)
 
+        self.lift_sensor = LaserCAN(1)
+
+
+    def periodic(self):
+        measurement = self.lift_sensor.get_measurement()
+        wpilib.SmartDashboard.putNumber("LaserCAN Measurement", measurement.distance_mm)
+
     def set_lift_speed(self, speed):
         self.left_lift_motor.set(speed)
         self.right_lift_motor.set(speed)
 
     def get_distance(self):
-        """
-        insert LaserCanHere
-        """
+        measurement = self.lift_sensor.get_measurement()
+        if measurement is not None:
+            return measurement
+        else:
+            return -1

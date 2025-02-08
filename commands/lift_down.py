@@ -12,7 +12,7 @@ class LiftDown(commands2.Command):
         self.addRequirements(self.lift_sub)
 
     def execute(self) -> None:
-        self.lift_sub.set_lift_speed(-0.05)
+        self.lift_sub.set_lift_speed(-0.1)
 
     def isFinished(self) -> bool:
         return False

@@ -5,7 +5,7 @@ import wpimath.controller
 from subsystems.lift_subsystem import LiftSubsystem
 
 
-class SwingArmToPosition(commands2.PIDCommand):
+class LiftToPosition(commands2.PIDCommand):
 
     def __init__(self, lift_sub: LiftSubsystem, target_position) -> None:
         super().__init__(
@@ -15,7 +15,7 @@ class SwingArmToPosition(commands2.PIDCommand):
             # Set reference to target
             target_position,
             # Pipe output to turn arm
-            lambda output: lift_sub.set_lift_speed(output),
+            lambda output: wpilib.SmartDashboard.putNumber("Lift To Position Output", output),
             # Require the arm
             lift_sub
         )
