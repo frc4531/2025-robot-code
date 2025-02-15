@@ -7,51 +7,21 @@ from commands2 import SubsystemBase
 
 class VisionSubsystem(SubsystemBase):
     # Create a new VisionSubsystem
-    current_shoot_x = 0.0
-    current_shoot_y = 0.0
-    current_shoot_a = 0.0
-    current_shoot_v = 0.0
-
-    current_intake_x = 0.0
-    current_intake_y = 0.0
-    current_intake_a = 0.0
-    current_intake_v = 0.0
 
     def __init__(self) -> None:
         super().__init__()
         self.inst = ntcore.NetworkTableInstance.getDefault()
-        self.shoot_table = self.inst.getTable("limelight-shoot")
-        self.intake_table = self.inst.getTable("limelight-intake")
+        front_table = self.inst.getTable("limelight-front")
+        back_table = self.inst.getTable("limelight-back")
 
-        self.shoot_x_entry = self.shoot_table.getEntry("tx")
-        self.shoot_y_entry = self.shoot_table.getEntry("ty")
-        self.shoot_a_entry = self.shoot_table.getEntry("ta")
-        self.shoot_v_entry = self.shoot_table.getEntry("tv")
+        self.front_x_entry = front_table.getDoubleTopic("tx").subscribe(0.0)
+        self.front_y_entry = front_table.getDoubleTopic("ty").subscribe(0.0)
+        self.front_a_entry = front_table.getDoubleTopic("ta").subscribe(0.0)
+        self.front_v_entry = front_table.getDoubleTopic("tv").subscribe(0.0)
+        self.front_id_entry = front_table.getDoubleTopic("tid").subscribe(0)
 
-        self.intake_x_entry = self.intake_table.getEntry("tx")
-        self.intake_y_entry = self.intake_table.getEntry("ty")
-        self.intake_a_entry = self.intake_table.getEntry("ta")
-        self.intake_v_entry = self.intake_table.getEntry("tv")
-
-    def periodic(self) -> None:
-        # Shoot Data
-        self.current_shoot_x = self.shoot_x_entry.getDouble(0.0)
-        self.current_shoot_y = self.shoot_y_entry.getDouble(0.0)
-        self.current_shoot_a = self.shoot_a_entry.getDouble(0.0)
-        self.current_shoot_v = self.shoot_v_entry.getDouble(0.0)
-
-        wpilib.SmartDashboard.putNumber("Shoot X Entry", self.current_shoot_x)
-        wpilib.SmartDashboard.putNumber("Shoot Y Entry", self.current_shoot_y)
-        wpilib.SmartDashboard.putNumber("Shoot A Entry", self.current_shoot_a)
-        wpilib.SmartDashboard.putNumber("Shoot V Entry", self.current_shoot_v)
-
-        # Intake Data
-        self.current_intake_x = self.intake_x_entry.getDouble(0.0)
-        self.current_intake_y = self.intake_y_entry.getDouble(0.0)
-        self.current_intake_a = self.intake_a_entry.getDouble(0.0)
-        self.current_intake_v = self.intake_v_entry.getDouble(0.0)
-
-        wpilib.SmartDashboard.putNumber("Intake X Entry", self.current_intake_x)
-        wpilib.SmartDashboard.putNumber("Intake Y Entry", self.current_intake_y)
-        wpilib.SmartDashboard.putNumber("Intake A Entry", self.current_intake_a)
-        wpilib.SmartDashboard.putNumber("Intake V Entry", self.current_intake_v)
+        self.back_x_entry = back_table.getDoubleTopic("tx").subscribe(0.0)
+        self.back_y_entry = back_table.getDoubleTopic("ty").subscribe(0.0)
+        self.back_a_entry = back_table.getDoubleTopic("ta").subscribe(0.0)
+        self.back_v_entry = back_table.getDoubleTopic("tv").subscribe(0.0)
+        self.back_id_entry = back_table.getDoubleTopic("tid").subscribe(0)

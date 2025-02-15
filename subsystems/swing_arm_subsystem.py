@@ -1,3 +1,4 @@
+import ntcore
 import rev
 import wpilib
 from commands2 import SubsystemBase
@@ -13,8 +14,18 @@ class SwingArmSubsystem(SubsystemBase):
 
         self.swing_arm_abs_encoder = self.swing_arm_motor.getAbsoluteEncoder()
 
+        # define the wrist subsystem's network table
+        nt_instance = ntcore.NetworkTableInstance.getDefault()
+        swing_arm_table = nt_instance.getTable("swing_arm_table")
+
+        self.swing_arm_position_entry = swing_arm_table.getDoubleTopic("swing_arm_position").publish()
+        self.swing_arm_pid_output_entry = swing_arm_table.getDoubleTopic("swing_arm_pid_output").publish()
+
+    def periodic(self) -> None:
+        self.swing_arm_position_entry.set(self.get_swing_arm_position())
+
     def set_swing_arm_speed(self, speed):
         self.swing_arm_motor.set(speed)
 
     def get_swing_arm_position(self):
-        return self.swing_arm_abs_encoder
+        return self.swing_arm_abs_encoder.getPosition()

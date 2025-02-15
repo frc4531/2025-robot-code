@@ -12,10 +12,15 @@ from commands.drive_command import DriveCommand
 from commands.lift_down import LiftDown
 from commands.lift_to_position import LiftToPosition
 from commands.lift_up import LiftUp
+from commands.swing_arm_to_position import SwingArmToPosition
+from commands.wrist_to_position import WristToPosition
 from constants.swerve_constants import OIConstants, AutoConstants, DriveConstants
 from subsystems.drive_subsystem import DriveSubsystem
 from subsystems.vision_subsystem import VisionSubsystem
 from subsystems.lift_subsystem import LiftSubsystem
+from subsystems.wrist_subsystem import WristSubsystem
+from subsystems.swing_arm_subsystem import SwingArmSubsystem
+from subsystems.intake_subsystem import IntakeSubsystem
 
 
 class RobotContainer:
@@ -31,6 +36,9 @@ class RobotContainer:
         self.drive_subsystem = DriveSubsystem()
         self.vision_subsystem = VisionSubsystem()
         self.lift_subsystem = LiftSubsystem()
+        self.swing_arm_subsystem = SwingArmSubsystem()
+        self.wrist_subsystem = WristSubsystem()
+        self.intake_subsystem = IntakeSubsystem()
 
         # The driver's controller
         self.driver_controller = wpilib.Joystick(OIConstants.kDriverControllerPort)
@@ -60,6 +68,14 @@ class RobotContainer:
         )
         commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
             LiftToPosition(self.lift_subsystem, 0.4)
+        )
+
+        commands2.button.JoystickButton(self.operator_controller, 4).whileTrue(
+            WristToPosition(self.wrist_subsystem, 0.49)
+        )
+
+        commands2.button.JoystickButton(self.operator_controller, 5).whileTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, 0.49)
         )
 
     def disable_pid_subsystems(self) -> None:
