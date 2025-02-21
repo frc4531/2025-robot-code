@@ -71,11 +71,14 @@ class RobotContainer:
         )
 
         commands2.button.JoystickButton(self.operator_controller, 4).whileTrue(
-            WristToPosition(self.wrist_subsystem, 0.49)
+            WristToPosition(self.wrist_subsystem, 0.4)
         )
 
         commands2.button.JoystickButton(self.operator_controller, 5).whileTrue(
-            SwingArmToPosition(self.swing_arm_subsystem, 0.49)
+            SwingArmToPosition(self.swing_arm_subsystem, 0.70)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 6).onTrue(
+            LiftToPosition(self.lift_subsystem, 24)
         )
 
     def disable_pid_subsystems(self) -> None:

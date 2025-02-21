@@ -15,7 +15,7 @@ class WristToPosition(commands2.PIDCommand):
             # Set reference to target
             target_position,
             # Pipe output to turn arm
-            lambda output: wrist_sub.wrist_pid_output_entry.set(output),
+            lambda output: wrist_sub.set_wrist_speed(output),
             # Require the arm
             wrist_sub
         )

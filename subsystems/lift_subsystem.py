@@ -1,3 +1,4 @@
+import ntcore
 import rev
 import wpilib
 from commands2 import SubsystemBase
@@ -16,13 +17,20 @@ class LiftSubsystem(SubsystemBase):
 
         self.lift_sensor = LaserCAN(1)
 
-    # def periodic(self):
-        # wpilib.SmartDashboard.putNumber("Lift Sensor", self.get_distance())
+        nt_instance = ntcore.NetworkTableInstance.getDefault()
+        lift_table = nt_instance.getTable("lift_table")
+
+        self.lift_position_entry = lift_table.getDoubleTopic("lift_position").publish()
+        self.lift_pid_output_entry = lift_table.getDoubleTopic("lift_pid_output").publish()
+
+    def periodic(self):
+        self.lift_position_entry.set(self.get_lift_position())
 
     def set_lift_speed(self, speed):
         self.left_lift_motor.set(speed)
         self.right_lift_motor.set(speed)
 
-    # def get_distance(self):
-        # measurement = self.lift_sensor.get_measurement()
-        # return measurement.distance_mm
+    def get_lift_position(self):
+        millimeter = self.lift_sensor.get_measurement().distance_mm
+        inch = (millimeter/25.4)
+        return inch
