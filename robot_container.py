@@ -1,19 +1,28 @@
 import math
 
 import commands2
+import ntcore
 import wpilib
+import libgrapplefrc
 
 from commands2 import cmd
 from wpimath.controller import PIDController, ProfiledPIDControllerRadians, HolonomicDriveController
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.trajectory import TrajectoryConfig, TrajectoryGenerator
 
+from constants.position_constants import PositionConstants
 from commands.drive_command import DriveCommand
+from commands.intake_out import IntakeOut
+from commands.intake_until_loaded import IntakeUntilLoaded
 from commands.lift_down import LiftDown
 from commands.lift_to_position import LiftToPosition
 from commands.lift_up import LiftUp
+from commands.swing_arm_down import SwingArmDown
 from commands.swing_arm_to_position import SwingArmToPosition
+from commands.swing_arm_up import SwingArmUp
+from commands.wrist_down import WristDown
 from commands.wrist_to_position import WristToPosition
+from commands.wrist_up import WristUp
 from constants.swerve_constants import OIConstants, AutoConstants, DriveConstants
 from subsystems.drive_subsystem import DriveSubsystem
 from subsystems.vision_subsystem import VisionSubsystem
@@ -40,6 +49,8 @@ class RobotContainer:
         self.wrist_subsystem = WristSubsystem()
         self.intake_subsystem = IntakeSubsystem()
 
+        libgrapplefrc.can_bridge_tcp()
+
         # The driver's controller
         self.driver_controller = wpilib.Joystick(OIConstants.kDriverControllerPort)
         self.operator_controller = wpilib.Joystick(OIConstants.kOperatorControllerPort)
@@ -51,8 +62,8 @@ class RobotContainer:
         self.drive_subsystem.setDefaultCommand(
             DriveCommand(self.drive_subsystem)
         )
-
-
+        # Configure Auto Chooser
+        self.chooser = ntcore.StringArrayTopic
 
     def configure_button_bindings(self) -> None:
         """
@@ -60,26 +71,120 @@ class RobotContainer:
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
-        commands2.button.JoystickButton(self.operator_controller, 1).whileTrue(
-            LiftDown(self.lift_subsystem)
-        )
-        commands2.button.JoystickButton(self.operator_controller, 2).whileTrue(
-            LiftUp(self.lift_subsystem)
-        )
-        commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
-            LiftToPosition(self.lift_subsystem, 0.4)
-        )
+        #commands2.button.JoystickButton(self.operator_controller, 1).whileTrue(
+        #    SwingArmToPosition(self.swing_arm_subsystem,0.4)
+        #)
+        #commands2.button.JoystickButton(self.operator_controller, 2).whileTrue(
+        #    SwingArmToPosition(self.swing_arm_subsystem, 0.6)
+        #)
+        #commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
+        #    SwingArmToPosition(self.swing_arm_subsystem, 0.8)
+        #)
+        #commands2.button.JoystickButton(self.operator_controller, 1).whileTrue(
+        #    LiftUp(self.lift_subsystem)
+        #)
+        #commands2.button.JoystickButton(self.operator_controller, 2).whileTrue(
+        #    LiftDown(self.lift_subsystem)
+        #)
 
-        commands2.button.JoystickButton(self.operator_controller, 4).whileTrue(
-            WristToPosition(self.wrist_subsystem, 0.4)
-        )
+        #commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
+        #    SwingArmUp(self.swing_arm_subsystem)
+        #)
+        #commands2.button.JoystickButton(self.operator_controller, 4).whileTrue(
+        #   SwingArmDown(self.swing_arm_subsystem)
+        #)
 
-        commands2.button.JoystickButton(self.operator_controller, 5).whileTrue(
-            SwingArmToPosition(self.swing_arm_subsystem, 0.70)
-        )
+        #commands2.button.JoystickButton(self.operator_controller, 5).whileTrue(
+        #    WristUp(self.wrist_subsystem)
+        #)
+        #commands2.button.JoystickButton(self.operator_controller, 6).whileTrue(
+        #    WristDown(self.wrist_subsystem)
+        #)
+
+        #commands2.button.JoystickButton(self.operator_controller, 4).whileTrue(
+        #    WristToPosition(self.wrist_subsystem, 0.4)
+        #)
+        # Start Operator Control Block
+        # Outtake
+        #commands2.button.JoystickButton(self.operator_controller, 5).whileTrue(
+        #    IntakeOut(self.intake_subsystem)
+        #)
+        # Intake
+        #commands2.button.JoystickButton(self.operator_controller, 6).whileTrue(
+        #    IntakeUntilLoaded(self.intake_subsystem)
+        #)
+        # Intake In
         commands2.button.JoystickButton(self.operator_controller, 6).onTrue(
-            LiftToPosition(self.lift_subsystem, 24)
+            IntakeUntilLoaded(self.intake_subsystem)
         )
+        # Intake Out
+        commands2.button.JoystickButton(self.operator_controller, 5).whileTrue(
+            IntakeOut(self.intake_subsystem)
+        )
+        # Intake From Coral Station
+        commands2.button.JoystickButton(self.operator_controller, 11).onTrue(
+            LiftToPosition(self.lift_subsystem, 4)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 11).whileTrue(
+            WristToPosition(self.wrist_subsystem, 0.60)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 11).whileTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, 0.80)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 11).whileTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, 0.80)
+        )
+        # Level 1 Coral Deposit
+        commands2.button.JoystickButton(self.operator_controller, 13).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralOneLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 13).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralOneWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 13).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralOneSwingArm)
+        )
+        # Level 2 Coral Deposit
+        commands2.button.JoystickButton(self.operator_controller, 12).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralTwoLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 12).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralTwoWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 12).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralTwoSwingArm)
+        )
+        # Level 3 Coral Deposit
+        commands2.button.JoystickButton(self.operator_controller, 8).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralThreeLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 8).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralThreeWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 8).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralThreeSwingArm)
+        )
+        # Level 4 Coral Deposit
+        commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralFourLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralFourWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralFourSwingArm)
+        )
+        # Ground Algae
+        commands2.button.JoystickButton(self.operator_controller, 1).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kAlgaeGroundLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 1).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kAlgaeGroundWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 1).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kAlgaeGroundSwingArm)
+        )
+
 
     def disable_pid_subsystems(self) -> None:
         """Disables all ProfiledPIDSubsystem and PIDSubsystem instances.

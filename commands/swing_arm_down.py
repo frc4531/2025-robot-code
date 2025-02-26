@@ -12,7 +12,7 @@ class SwingArmDown(commands2.Command):
         self.addRequirements(self.swing_arm_sub)
 
     def execute(self) -> None:
-        self.swing_arm_sub.set_swing_arm_speed(-0.05)
+        self.swing_arm_sub.set_swing_arm_speed(0.8)
 
     def isFinished(self) -> bool:
         return False

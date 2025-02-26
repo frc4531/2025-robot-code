@@ -12,7 +12,7 @@ class IntakeIn(commands2.Command):
         self.addRequirements(self.intake_sub)
 
     def execute(self) -> None:
-        self.intake_sub.set_intake_speed(0.05)
+        self.intake_sub.set_intake_speed(0.15)
 
     def isFinished(self) -> bool:
         return False

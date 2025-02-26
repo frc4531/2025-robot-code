@@ -12,7 +12,7 @@ class WristUp(commands2.Command):
         self.addRequirements(self.wrist_sub)
 
     def execute(self) -> None:
-        self.wrist_sub.set_wrist_speed(0.05)
+        self.wrist_sub.set_wrist_speed(0.2)
 
     def isFinished(self) -> bool:
         return False

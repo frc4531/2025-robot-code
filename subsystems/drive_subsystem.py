@@ -2,6 +2,7 @@ import math
 import typing
 
 import navx
+import ntcore
 import wpilib
 
 from commands2 import Subsystem
@@ -73,7 +74,11 @@ class DriveSubsystem(Subsystem):
                 self.rear_right.get_position(),
             ),
         )
+        # define the wrist subsystem's network table
+        nt_instance = ntcore.NetworkTableInstance.getDefault()
+        swing_arm_table = nt_instance.getTable("drive_table")
 
+        self.swing_arm_position_entry = swing_arm_table.getDoubleTopic("drive_train_heading").publish()
 
     def periodic(self) -> None:
         # Update the odometry in the periodic block
