@@ -5,7 +5,8 @@ import ntcore
 import wpilib
 import libgrapplefrc
 
-from commands2 import cmd
+from commands2 import cmd, WaitCommand
+from commands2.cmd import waitSeconds
 from wpimath.controller import PIDController, ProfiledPIDControllerRadians, HolonomicDriveController
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.trajectory import TrajectoryConfig, TrajectoryGenerator
@@ -63,7 +64,15 @@ class RobotContainer:
             DriveCommand(self.drive_subsystem)
         )
         # Configure Auto Chooser
-        self.chooser = ntcore.StringArrayTopic
+        self.chooser = wpilib.SendableChooser()
+        self.do_nothing = "Do Nothing"
+        self.drive_forward = "Drive Forward"
+        self.mid_one_coral = "Middle One Coral"
+
+        self.chooser.setDefaultOption("Shoot 1 Only", self.do_nothing)
+        self.chooser.addOption("Drive Forward", self.drive_forward)
+        self.chooser.addOption("Middle One Coral", self.mid_one_coral)
+
 
     def configure_button_bindings(self) -> None:
         """
@@ -161,19 +170,6 @@ class RobotContainer:
         commands2.button.JoystickButton(self.operator_controller, 8).onTrue(
             WristToPosition(self.wrist_subsystem, PositionConstants.kCoralThreeWrist)
         )
-        commands2.button.JoystickButton(self.operator_controller, 8).onTrue(
-            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralThreeSwingArm)
-        )
-        # Level 4 Coral Deposit
-        commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
-            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralFourLift)
-        )
-        commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
-            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralFourWrist)
-        )
-        commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
-            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralFourSwingArm)
-        )
         # Ground Algae
         commands2.button.JoystickButton(self.operator_controller, 1).onTrue(
             LiftToPosition(self.lift_subsystem, PositionConstants.kAlgaeGroundLift)
@@ -190,9 +186,25 @@ class RobotContainer:
         """Disables all ProfiledPIDSubsystem and PIDSubsystem instances.
         This should be called on robot disable to prevent integral windup."""
 
-    def get_autonomous_command(self) -> commands2.Command:
+    def get_autonomous_command(self) -> commands2.command:
         """Use this to pass the autonomous command to the main {@link Robot} class.
 
+        )
+        commands2.button.JoystickButton(self.operator_controller, 8).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralThreeSwingArm)
+        )
+        # Level 4 Coral Deposit
+        commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralFourLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralFourWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralFourSwingArm)
+        )
+        # Ground Algae
+        commands2.button.JoystickButton(self.operator_controller, 1).onTrue(
         :returns: the command to run in autonomous
         """
         # Create config for trajectory
@@ -203,53 +215,70 @@ class RobotContainer:
         # Add kinematics to ensure max speed is actually obeyed
         config.setKinematics(DriveConstants.kDriveKinematics)
 
-        # An example trajectory to follow. All units in meters.
-        example_trajectory = TrajectoryGenerator.generateTrajectory(
+        # Forward Auto Trajectory to follow. All units in meters.
+        forward_trajectory = TrajectoryGenerator.generateTrajectory(
             # Start at the origin facing the +X direction
-            Pose2d(0, 0, Rotation2d(0)),
+            Pose2d(0, 0, Rotation2d.fromDegrees(0)),
             # Pass through these two interior waypoints, making an 's' curve path
-            [Translation2d(1, 1), Translation2d(2, -1)],
+            [],
             # End 3 meters straight ahead of where we started, facing forward
-            Pose2d(3, 0, Rotation2d(0)),
+            Pose2d(0, -3, Rotation2d.fromDegrees(0)),
             config,
         )
 
-        theta_controller = ProfiledPIDControllerRadians(
+        thetaController = ProfiledPIDControllerRadians(
             AutoConstants.kPThetaController,
             0,
             0,
             AutoConstants.kThetaControllerConstraints,
         )
-        theta_controller.enableContinuousInput(-math.pi, math.pi)
+        thetaController.enableContinuousInput(-math.pi, math.pi)
 
         holonomic_controller = HolonomicDriveController(PIDController(AutoConstants.kPXController, 0, 0),
                                                         PIDController(AutoConstants.kPYController, 0, 0),
-                                                        theta_controller)
+                                                        thetaController)
 
-        swerve_controller_command = commands2.SwerveControllerCommand(
-            example_trajectory,
+        forward_trajectory_command = commands2.SwerveControllerCommand(
+            forward_trajectory,
             self.drive_subsystem.get_pose,  # Functional interface to feed supplier
             DriveConstants.kDriveKinematics,
             # Position controllers
             holonomic_controller,
-            self.drive_subsystem.set_module_states,  # Same error appears in 2024-robot-code so IDK
+            self.drive_subsystem.set_module_states("Stevest Of Jobs"),
             (self.drive_subsystem,),
         )
 
-        # Reset odometry to the starting pose of the trajectory.
-        self.drive_subsystem.reset_odometry(example_trajectory.initialPose())
+        # Start Auto Logic
+        auto_selected = self.chooser.getSelected()
 
-        # Run path following command, then stop at the end.
-        # return self.test_path_auto.andThen(
-        #     cmd.run(
-        #         lambda: self.drive_subsystem.drive(0, 0, 0, False, False),
-        #         self.drive_subsystem
-        #     )
-        # )
+        match auto_selected:
+            case self.do_nothing:
+                return waitSeconds(1)
+            case self.drive_forward:
+                # Reset odometry to the starting pose of the trajectory.
+                self.drive_subsystem.reset_odometry(forward_trajectory.initialPose())
 
-        return swerve_controller_command.andThen(
-            cmd.run(
-                lambda: self.drive_subsystem.drive(0, 0, 0, False, False),
-                self.drive_subsystem,
-            )
-        )
+                return commands2.SequentialCommandGroup(
+                    commands2.ParallelDeadlineGroup(
+                        WaitCommand(3),
+                        commands2.RunCommand(lambda: self.drive_subsystem.drive(0, -0.4, 0, True, False))
+                    )
+                )
+            case self.mid_one_coral:
+                return commands2.SequentialCommandGroup(
+                    commands2.ParallelDeadlineGroup(
+                        WaitCommand(5),
+                        LiftToPosition(self.lift_subsystem, PositionConstants.kCoralOneLift),
+                        SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralOneSwingArm),
+                        WristToPosition(self.wrist_subsystem, PositionConstants.kCoralOneWrist)
+                    ),
+                    commands2.ParallelDeadlineGroup(
+                        WaitCommand(1),
+                        commands2.RunCommand(lambda: self.drive_subsystem.drive(0, -0.4, 0, True, False))
+                    ),
+                    commands2.ParallelDeadlineGroup(
+                        WaitCommand(1),
+                        IntakeOut(self.intake_subsystem)
+                    ),
+                )
+
