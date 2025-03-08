@@ -8,7 +8,7 @@ from subsystems.drive_subsystem import DriveSubsystem
 from constants.swerve_constants import OIConstants
 
 
-class LiftUp(commands2.Command):
+class DriveFlip(commands2.Command):
 
     def __init__(self, drive_sub: DriveSubsystem, stick: wpilib.Joystick) -> None:
         super().__init__()
@@ -23,15 +23,15 @@ class LiftUp(commands2.Command):
 
         self.min_rot_speed = 0.05
         self.max_rot_speed = 0.8
-        self.target_threshold = 2
+        self.target_threshold = 5
 
-        self.rot_controller = wpimath.controller.PIDController(0.05, 0, 0)
+        self.rot_controller = wpimath.controller.PIDController(0.025, 0, 0)
 
     def initialize(self):
         self.current_heading = self.drive_sub.get_heading()
         self.target_heading = self.current_heading + 180
 
-        if self.target_heading >= 360:
+        if self.target_heading >= 180:
             self.target_heading = self.target_heading - 360
 
     def execute(self) -> None:

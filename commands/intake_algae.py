@@ -3,7 +3,7 @@ import commands2
 from subsystems.intake_subsystem import IntakeSubsystem
 
 
-class IntakeOut(commands2.Command):
+class IntakeAlgae(commands2.Command):
 
     def __init__(self, intake_sub: IntakeSubsystem) -> None:
         super().__init__()
@@ -12,7 +12,7 @@ class IntakeOut(commands2.Command):
         self.addRequirements(self.intake_sub)
 
     def execute(self) -> None:
-        self.intake_sub.set_intake_speed(0.95)
+        self.intake_sub.set_intake_speed(-0.8)
 
     def isFinished(self) -> bool:
         return False
