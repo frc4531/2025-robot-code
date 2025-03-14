@@ -30,8 +30,10 @@ class DriveToRightReef(commands2.Command):
 
         # Y Speed Controller
         self.strafe_controller = wpimath.controller.PIDController(1, 0, 0)
+        self.strafe_controller.setSetpoint(-21)
         # X Speed Controller
         self.forward_controller = wpimath.controller.PIDController(1, 0, 0)
+        self.forward_controller.setSetpoint(-0.39)
 
         # network tables
         nt_instance = ntcore.NetworkTableInstance.getDefault()
@@ -42,8 +44,9 @@ class DriveToRightReef(commands2.Command):
 
     def execute(self) -> None:
         if self.vision_sub.front_v_entry == 1:
-            pid_strafe_output = self.strafe_controller.calculate(self.vision_sub.front_y_entry, -21)
-            pid_forward_output = self.forward_controller.calculate(self.vision_sub.front_x_entry, -0.39)
+            pid_strafe_output = self.strafe_controller.calculate(self.vision_sub.front_y_entry)
+            pid_forward_output = self.forward_controller.calculate(self.vision_sub.front_x_entry)
+
             y_output = max(min(pid_strafe_output, self.max_strafe_speed), -self.max_strafe_speed)
             x_output = max(min(pid_forward_output, self.max_forward_speed), -self.max_forward_speed)
 
