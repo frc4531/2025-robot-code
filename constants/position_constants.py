@@ -1,7 +1,7 @@
 class PositionConstants:
     # Storage Position
     kStoragePosLift = 3
-    kStoragePosSwingArm = 0.16
+    kStoragePosSwingArm = 0.11
     kStoragePosWrist = 0.45
     # Coral Intake Station
     kCoralIntakeLift = 3.25
@@ -20,7 +20,7 @@ class PositionConstants:
     kCoralThreeSwingArm = 0.52 - 0.333
     kCoralThreeWrist = 0.436
     # Level Four Coral
-    kCoralFourLift = 52
+    kCoralFourLift = 47
     kCoralFourSwingArm = 0.55 - 0.333
     kCoralFourWrist = 0.4
     # Ground Algae Pickup

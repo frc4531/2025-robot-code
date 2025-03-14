@@ -25,6 +25,12 @@ class SwingArmSubsystem(SubsystemBase):
         self.swing_arm_position_entry.set(self.get_swing_arm_position())
 
     def set_swing_arm_speed(self, speed):
+        if speed > 0.35:
+            speed = 0.35
+        elif speed < -0.35:
+            speed = -0.35
+        else:
+            speed = speed
         self.swing_arm_motor.set(speed)
 
     def get_swing_arm_position(self):

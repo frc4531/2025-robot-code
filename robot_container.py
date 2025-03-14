@@ -13,6 +13,9 @@ from wpimath.trajectory import TrajectoryConfig, TrajectoryGenerator
 
 from commands.climber_down import ClimberDown
 from commands.climber_up import ClimberUp
+from commands.drive_to_center_reef import DriveToCenterReef
+from commands.drive_to_left_reef import DriveToLeftReef
+from commands.drive_to_right_reef import DriveToRightReef
 from commands.input_drive import InputDrive
 from commands.intake_algae import IntakeAlgae
 from constants.position_constants import PositionConstants
@@ -243,9 +246,17 @@ class RobotContainer:
         commands2.button.JoystickButton(self.driver_controller, 1).onTrue(
             SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kStoragePosSwingArm)
         )
-        # 180 Turn
+        # Left Reef Align
+        commands2.button.JoystickButton(self.driver_controller, 3).onTrue(
+            DriveToLeftReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
+        )
+        # Center Reef Align
         commands2.button.JoystickButton(self.driver_controller, 2).onTrue(
-            DriveFlip(self.drive_subsystem, self.driver_controller)
+            DriveToCenterReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
+        )
+        # Right Reef Align
+        commands2.button.JoystickButton(self.driver_controller, 4).whileTrue(
+            DriveToRightReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
         )
         # Climber Up
         commands2.button.JoystickButton(self.driver_controller, 5).whileTrue(
