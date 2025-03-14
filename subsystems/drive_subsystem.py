@@ -76,9 +76,9 @@ class DriveSubsystem(Subsystem):
         )
         # define the wrist subsystem's network table
         nt_instance = ntcore.NetworkTableInstance.getDefault()
-        swing_arm_table = nt_instance.getTable("drive_table")
+        drive_table = nt_instance.getTable("drive_table")
 
-        self.swing_arm_position_entry = swing_arm_table.getDoubleTopic("drive_train_heading").publish()
+        self.heading_entry = drive_table.getDoubleTopic("drive_train_heading").publish()
 
     def periodic(self) -> None:
         # Update the odometry in the periodic block
@@ -91,6 +91,8 @@ class DriveSubsystem(Subsystem):
                 self.rear_right.get_position(),
             ),
         )
+
+        self.heading_entry.set(self.get_heading())
 
     def get_pose(self) -> Pose2d:
         """Returns the currently-estimated pose of the robot.
