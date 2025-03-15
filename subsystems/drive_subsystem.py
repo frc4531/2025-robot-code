@@ -52,7 +52,7 @@ class DriveSubsystem(Subsystem):
         )
 
         # The gyro sensor
-        self.gyro = navx.AHRS(navx.AHRS.NavXComType.kMXP_SPI)
+        self.gyro = navx.AHRS(navx.AHRS.NavXComType.kUSB1)
 
         # Slew rate filter variables for controlling lateral acceleration
         self.current_rotation = 0.0
@@ -74,7 +74,7 @@ class DriveSubsystem(Subsystem):
                 self.rear_right.get_position(),
             ),
         )
-        # define the wrist subsystem's network table
+        # define the drive subsystem's network table
         nt_instance = ntcore.NetworkTableInstance.getDefault()
         drive_table = nt_instance.getTable("drive_table")
 

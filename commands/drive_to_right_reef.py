@@ -31,13 +31,13 @@ class DriveToRightReef(commands2.Command):
         self.max_rotate_speed = 0.5
 
         # Y Speed Controller
-        self.strafe_controller = wpimath.controller.PIDController(0.0005, 0, 0)
-        self.strafe_controller.setSetpoint(-18.6)
+        self.strafe_controller = wpimath.controller.PIDController(0.001, 0, 0)
+        # self.strafe_controller.setSetpoint(-18.6)
         # X Speed Controller
-        self.forward_controller = wpimath.controller.PIDController(0.01, 0, 0)
-        self.forward_controller.setSetpoint(14)
+        self.forward_controller = wpimath.controller.PIDController(0.015, 0, 0)
+        # self.forward_controller.setSetpoint(14)
         # Z Speed Controller
-        self.rotate_controller = wpimath.controller.PIDController(0.011, 0, 0)
+        self.rotate_controller = wpimath.controller.PIDController(0.04, 0, 0)
 
         # network tables
         nt_instance = ntcore.NetworkTableInstance.getDefault()
@@ -48,8 +48,8 @@ class DriveToRightReef(commands2.Command):
 
     def execute(self) -> None:
         if self.vision_sub.front_v_entry == 1:
-            pid_strafe_output = self.strafe_controller.calculate(self.vision_sub.front_y_entry)
-            pid_forward_output = self.forward_controller.calculate(self.vision_sub.front_a_entry)
+            pid_strafe_output = self.strafe_controller.calculate(self.vision_sub.front_y_entry, -18.6)
+            pid_forward_output = self.forward_controller.calculate(self.vision_sub.front_a_entry, 14)
 
             x_output = max(min(pid_strafe_output, self.max_strafe_speed), -self.max_strafe_speed)
             y_output = max(min(pid_forward_output, self.max_forward_speed), -self.max_forward_speed)
@@ -77,8 +77,8 @@ class DriveToRightReef(commands2.Command):
                 case _:
                     target_angle = self.drive_sub.get_heading()
 
-            self.rotate_controller.setSetpoint(target_angle)
-            pid_rotate_output = self.rotate_controller.calculate(self.drive_sub.get_heading())
+            # self.rotate_controller.setSetpoint(target_angle)
+            pid_rotate_output = self.rotate_controller.calculate(self.drive_sub.get_heading(), target_angle)
 
             z_output = max(min(-pid_rotate_output, self.max_rotate_speed), -self.max_rotate_speed)
 
@@ -92,13 +92,13 @@ class DriveToRightReef(commands2.Command):
                 wpimath.applyDeadband(
                     -x_output, OIConstants.kDriveDeadband
                 ),
-                -wpimath.applyDeadband(
+                wpimath.applyDeadband(
                     y_output, OIConstants.kDriveDeadband
                 ),
                 wpimath.applyDeadband(
                     z_output, OIConstants.kDriveDeadband
                 ),
-                False,
+                True,
                 False,
             )
         else:
@@ -116,7 +116,7 @@ class DriveToRightReef(commands2.Command):
                 -wpimath.applyDeadband(
                     self.driver_controller.getZ(), OIConstants.kDriveDeadband
                 ),
-                False,
+                True,
                 False,
             )
 
