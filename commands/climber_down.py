@@ -12,7 +12,7 @@ class ClimberDown(commands2.Command):
         self.addRequirements(self.climber_sub)
 
     def execute(self) -> None:
-        self.climber_sub.set_climber_speed(0.5)
+        self.climber_sub.set_climber_speed(0.8)
 
     def isFinished(self) -> bool:
         return False
