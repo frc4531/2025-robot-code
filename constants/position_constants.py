@@ -1,7 +1,7 @@
 class PositionConstants:
     # Storage Position
     kStoragePosLift = 3
-    kStoragePosSwingArm = 0.11
+    kStoragePosSwingArm = 0.125
     kStoragePosWrist = 0.45
     # Coral Intake Station
     kCoralIntakeLift = 3.25

@@ -99,12 +99,12 @@ class RobotContainer:
         #commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
         #    SwingArmToPosition(self.swing_arm_subsystem, 0.8)
         #)
-        #commands2.button.JoystickButton(self.operator_controller, 1).whileTrue(
-        #    LiftUp(self.lift_subsystem)
-        #)
-        #commands2.button.JoystickButton(self.operator_controller, 2).whileTrue(
-        #    LiftDown(self.lift_subsystem)
-        #)
+        commands2.button.JoystickButton(self.operator_controller, 1).whileTrue(
+            LiftUp(self.lift_subsystem)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
+            LiftDown(self.lift_subsystem)
+        )
 
         #commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
         #    SwingArmUp(self.swing_arm_subsystem)
@@ -124,14 +124,6 @@ class RobotContainer:
         #    WristToPosition(self.wrist_subsystem, 0.4)
         #)
         # Start Operator Control Block
-        # Outtake
-        #commands2.button.JoystickButton(self.operator_controller, 5).whileTrue(
-        #    IntakeOut(self.intake_subsystem)
-        #)
-        # Intake
-        #commands2.button.JoystickButton(self.operator_controller, 6).whileTrue(
-        #    IntakeUntilLoaded(self.intake_subsystem)
-        #)
         # Intake In
         commands2.button.JoystickButton(self.operator_controller, 6).onTrue(
             IntakeUntilLoaded(self.intake_subsystem)
@@ -139,10 +131,6 @@ class RobotContainer:
         # Intake Out
         commands2.button.JoystickButton(self.operator_controller, 5).whileTrue(
             IntakeOut(self.intake_subsystem)
-        )
-        # Intake Algae
-        commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
-            IntakeAlgae(self.intake_subsystem)
         )
         # Intake From Coral Station
         commands2.button.JoystickButton(self.operator_controller, 2).onTrue(

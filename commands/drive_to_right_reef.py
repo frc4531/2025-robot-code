@@ -25,31 +25,42 @@ class DriveToRightReef(commands2.Command):
         self.max_strafe_speed = 0.6
         self.min_strafe_speed = 0.05
 
-        self.max_forward_speed = 0.6
+        self.max_forward_speed = 0.45
         self.min_forward_speed = 0.05
 
         self.max_rotate_speed = 0.5
 
+        self.strafe_set_point = -18.6
+        self.forward_set_point = 14
+
+        self.strafe_target_threshold = 0.1
+        self.forward_target_threshold = 0.1
+
         # Y Speed Controller
-        self.strafe_controller = wpimath.controller.PIDController(0.001, 0, 0)
+        self.strafe_controller = wpimath.controller.PIDController(0.030, 0, 0) # 0.004
         # self.strafe_controller.setSetpoint(-18.6)
         # X Speed Controller
         self.forward_controller = wpimath.controller.PIDController(0.015, 0, 0)
         # self.forward_controller.setSetpoint(14)
         # Z Speed Controller
-        self.rotate_controller = wpimath.controller.PIDController(0.04, 0, 0)
+        self.rotate_controller = wpimath.controller.PIDController(0.03, 0, 0)
 
         # network tables
-        nt_instance = ntcore.NetworkTableInstance.getDefault()
-        right_reef_table = nt_instance.getTable("right_reef_table")
+        # nt_instance = ntcore.NetworkTableInstance.getDefault()
+        # reef_table = nt_instance.getTable("reef_table")
+        #
+        # self.strafe_entry = reef_table.getDoubleTopic("strafe_entry").publish()
+        # self.forward_entry = reef_table.getDoubleTopic("forward_entry").publish()
+        # self.is_april_tag_tracking = reef_table.getBooleanTopic("is_april_tag_tracking").publish()
+        # self.april_tag_tracked = reef_table.getBooleanTopic("april_tag_tracked").publish()
 
-        self.strafe_entry = right_reef_table.getDoubleTopic("strafe_entry").publish()
-        self.forward_entry = right_reef_table.getDoubleTopic("forward_entry").publish()
+    # def initialize(self):
+        # self.is_april_tag_tracking.set(True)
 
     def execute(self) -> None:
         if self.vision_sub.front_v_entry == 1:
-            pid_strafe_output = self.strafe_controller.calculate(self.vision_sub.front_y_entry, -18.6)
-            pid_forward_output = self.forward_controller.calculate(self.vision_sub.front_a_entry, 14)
+            pid_strafe_output = self.strafe_controller.calculate(self.vision_sub.front_x_entry, self.strafe_set_point)
+            pid_forward_output = self.forward_controller.calculate(self.vision_sub.front_a_entry, self.forward_set_point)
 
             x_output = max(min(pid_strafe_output, self.max_strafe_speed), -self.max_strafe_speed)
             y_output = max(min(pid_forward_output, self.max_forward_speed), -self.max_forward_speed)
@@ -65,8 +76,8 @@ class DriveToRightReef(commands2.Command):
             #     x_output = -self.min_forward_speed
 
             # network tables
-            self.strafe_entry.set(pid_strafe_output)
-            self.forward_entry.set(pid_forward_output)
+            # self.strafe_entry.set(pid_strafe_output)
+            # self.forward_entry.set(pid_forward_output)
 
             # START ROTATE BLOCK
             match self.vision_sub.front_id_entry:
@@ -74,6 +85,8 @@ class DriveToRightReef(commands2.Command):
                     target_angle = 60
                 case 7:
                     target_angle = 0
+                case 19:
+                    target_angle = 60
                 case _:
                     target_angle = self.drive_sub.get_heading()
 
@@ -119,6 +132,15 @@ class DriveToRightReef(commands2.Command):
                 True,
                 False,
             )
+
+        # LED Boolean Logic
+        # if (self.strafe_target_threshold + self.strafe_set_point) > self.vision_sub.front_x_sub > (self.strafe_set_point - self.strafe_target_threshold):
+        #     self.april_tag_tracked.set(True)
+        # else:
+        #     self.april_tag_tracked.set(False)
+
+    # def end(self):
+            # self.is_april_tag_tracking.set(False)
 
     def isFinished(self) -> bool:
         return False

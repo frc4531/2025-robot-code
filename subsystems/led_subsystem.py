@@ -1,4 +1,5 @@
 import time
+import ntcore
 
 import wpilib
 from commands2 import SubsystemBase
@@ -7,11 +8,12 @@ from wpilib import SmartDashboard
 
 class LedSubsystem(SubsystemBase):
     # Create a new ArmSubsystem
-    led_buffer = 85
+    led_buffer = 40
 
     def __init__(self) -> None:
         super().__init__()
-        # PWM Port 1
+        self.led_buffer = 10
+        # PWM Port 0
         # Must be a PWM header, not MXP or DIO
         self.led = wpilib.AddressableLED(1)
 
@@ -38,28 +40,31 @@ class LedSubsystem(SubsystemBase):
         self.led.setData(self.ledData)
         self.led.start()
 
+        nt_instance = ntcore.NetworkTableInstance.getDefault()
+        self.reef_table = nt_instance.getTable("reef_table")
+        self.intake_table = nt_instance.getTable("intake_table")
+
     def periodic(self) -> None:
-        new_game_piece = SmartDashboard.getBoolean("LED_NewGamePiece", False)
-        tracking_april_tag = SmartDashboard.getBoolean("LED_TrackingGoal", False)
-        april_tag_tracked =
+        new_game_piece = self.intake_table.getBooleanTopic("new_game_piece")
+        currently_grabbing = self.intake_table.getBooleanTopic("currently_grabbing")
+        tracking_april_tag = self.reef_table.getBooleanTopic("is_april_tag_tracking")
+        april_tag_tracked = self.reef_table.getBooleanTopic("april_tag_tracked")
 
         blink_tracker = 0
 
-        if tracking_game_piece is True:
-            self.rainbow(10)
-        elif tracking_goal and shooter_on is False:
-            self.rgb_blink(0, 30)
-        elif tracking_goal and shooter_on is True:
-            self.pulse_all(100, 3)
-        elif not tracking_goal and shooter_on:
-            self.pulse_all(14, 30)
-        elif new_game_piece is True and self.blink_tracker < 50:
-            self.rgb_blink(60, 200)
-            self.blink_tracker = self.blink_tracker + 1
-        else:
-            self.pulse_along(14, 5)
-            self.blink_tracker = 0
-            SmartDashboard.putBoolean("LED_NewGamePiece", False)
+        # if currently_grabbing is True:
+        #     self.rainbow(10)
+        # elif tracking_april_tag and april_tag_tracked is False:
+        #     self.rgb_blink(0, 30)
+        # elif tracking_april_tag and april_tag_tracked is True:
+        #     self.pulse_all(100, 3)
+        # elif new_game_piece is True and self.blink_tracker < 50:
+        #     self.rgb_blink(60, 200)
+        #     self.blink_tracker = self.blink_tracker + 1
+        # else:
+        #     self.pulse_along(14, 5)
+        #     self.blink_tracker = 0
+        #     self.intake_table.getBooleanTopic("currently_grabbing").publish().set(False)
 
         # Flash Green 20 times, quickly
         # if self.test == 0:
