@@ -10,7 +10,7 @@ from subsystems.drive_subsystem import DriveSubsystem
 from subsystems.vision_subsystem import VisionSubsystem
 
 
-class DriveToLeftReef(commands2.Command):
+class DriveToCoralStation(commands2.Command):
 
     def __init__(self, drive_sub: DriveSubsystem, vision_sub: VisionSubsystem, stick: wpilib.Joystick) -> None:
         super().__init__()
@@ -30,16 +30,16 @@ class DriveToLeftReef(commands2.Command):
 
         self.max_rotate_speed = 0.5
 
-        self.strafe_set_point = 14.8
-        self.forward_set_point = 4.3
+        self.strafe_set_point = 18
+        self.forward_set_point = 3.4
 
         self.strafe_target_threshold = 0.1
         self.forward_target_threshold = 0.1
 
-        # X Speed Controller
-        self.strafe_controller = wpimath.controller.PIDController(0.03, 0.001, 0) # 0.004, 0.03
-        # self.strafe_controller.setSetpoint(-18.6)
         # Y Speed Controller
+        self.strafe_controller = wpimath.controller.PIDController(0.05, 0.001, 0) # 0.004, 0.03
+        # self.strafe_controller.setSetpoint(-18.6)
+        # X Speed Controller
         self.forward_controller = wpimath.controller.PIDController(0.04, 0.001, 0) # 0.015
         # self.forward_controller.setSetpoint(14)
         # Z Speed Controller
@@ -58,9 +58,9 @@ class DriveToLeftReef(commands2.Command):
         # self.is_april_tag_tracking.set(True)
 
     def execute(self) -> None:
-        if self.vision_sub.front_v_entry == 1:
-            pid_strafe_output = self.strafe_controller.calculate(self.vision_sub.front_x_entry, self.strafe_set_point)
-            pid_forward_output = self.forward_controller.calculate(self.vision_sub.front_a_entry, self.forward_set_point)
+        if self.vision_sub.back_v_entry == 1:
+            pid_strafe_output = self.strafe_controller.calculate(self.vision_sub.back_x_entry, self.strafe_set_point)
+            pid_forward_output = self.forward_controller.calculate(self.vision_sub.back_a_entry, self.forward_set_point)
 
             x_output = max(min(pid_strafe_output, self.max_strafe_speed), -self.max_strafe_speed)
             y_output = max(min(pid_forward_output, self.max_forward_speed), -self.max_forward_speed)
@@ -85,26 +85,8 @@ class DriveToLeftReef(commands2.Command):
                     target_angle = 60
                 case 7:
                     target_angle = 0
-                case 8:
-                    target_angle = -60
-                case 9:
-                    target_angle = -120
-                case 10:
-                    target_angle = -180
-                case 11:
-                    target_angle = 120
-                case 17:
-                    target_angle = -60
-                case 18:
-                    target_angle = 0
                 case 19:
-                    target_angle = 60 #60
-                case 20:
-                    target_angle = 120
-                case 21:
-                    target_angle = -180
-                case 22:
-                    target_angle = -120
+                    target_angle = 47 #60
                 case _:
                     target_angle = self.drive_sub.get_heading()
 
@@ -118,10 +100,10 @@ class DriveToLeftReef(commands2.Command):
             x_output = self.driver_controller.getX()
             z_output = self.driver_controller.getZ()
 
-        if self.vision_sub.front_v_entry == 1:
+        if self.vision_sub.back_v_entry == 1:
             self.drive_sub.drive(
                 wpimath.applyDeadband(
-                    -x_output, OIConstants.kDriveDeadband
+                    x_output, OIConstants.kDriveDeadband
                 ),
                 wpimath.applyDeadband(
                     y_output, OIConstants.kDriveDeadband

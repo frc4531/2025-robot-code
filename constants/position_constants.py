@@ -1,12 +1,12 @@
 class PositionConstants:
     # Storage Position
     kStoragePosLift = 3
-    kStoragePosSwingArm = 0.125
+    kStoragePosSwingArm = 0.18
     kStoragePosWrist = 0.45
     # Coral Intake Station
-    kCoralIntakeLift = 3.25
-    kCoralIntakeSwingArm = 0.244
-    kCoralIntakeWrist = 0.17
+    kCoralIntakeLift = 3
+    kCoralIntakeSwingArm = 0.15
+    kCoralIntakeWrist = 0.34
     # Level One Coral
     kCoralOneLift = 3
     kCoralOneSwingArm = 0.244
@@ -14,13 +14,13 @@ class PositionConstants:
     # Level Two Coral
     kCoralTwoLift = 5
     kCoralTwoSwingArm = 0.52 - 0.333
-    kCoralTwoWrist = 0.436
+    kCoralTwoWrist = 0.43
     # Level Three Coral
     kCoralThreeLift = 24.25
     kCoralThreeSwingArm = 0.52 - 0.333
     kCoralThreeWrist = 0.436
     # Level Four Coral
-    kCoralFourLift = 47
+    kCoralFourLift = 44
     kCoralFourSwingArm = 0.55 - 0.333
     kCoralFourWrist = 0.4
     # Ground Algae Pickup
@@ -28,7 +28,7 @@ class PositionConstants:
     kAlgaeGroundSwingArm = 0.33
     kAlgaeGroundWrist = 0.39
     # Level Two Algae Pickup
-    kAlgaeTwoLift = 15.75
+    kAlgaeTwoLift = 6
     kAlgaeTwoSwingArm = 0.52 - 0.333
     kAlgaeTwoWrist = 0.4
     # Level Three Algae Pickup
@@ -39,3 +39,7 @@ class PositionConstants:
     kAlgaeProcessorLift = 3
     kAlgaeProcessorSwingArm = 0.3
     kAlgaeProcessorWrist  = 0.25
+    # Barge Position
+    kBargeLift = 45
+    kBargeSwingArm = 0.236
+    kBargeWrist = 0.195

@@ -22,25 +22,25 @@ class DriveToRightReef(commands2.Command):
         self.driver_controller = stick
 
         # Constants
-        self.max_strafe_speed = 0.6
+        self.max_strafe_speed = 0.25
         self.min_strafe_speed = 0.05
 
-        self.max_forward_speed = 0.45
+        self.max_forward_speed = 0.125
         self.min_forward_speed = 0.05
 
         self.max_rotate_speed = 0.5
 
-        self.strafe_set_point = -18.6
+        self.strafe_set_point = -19.3
         self.forward_set_point = 14
 
         self.strafe_target_threshold = 0.1
         self.forward_target_threshold = 0.1
 
         # Y Speed Controller
-        self.strafe_controller = wpimath.controller.PIDController(0.030, 0, 0) # 0.004
+        self.strafe_controller = wpimath.controller.PIDController(0.05, 0.001, 0) # 0.004, 0.03
         # self.strafe_controller.setSetpoint(-18.6)
         # X Speed Controller
-        self.forward_controller = wpimath.controller.PIDController(0.015, 0, 0)
+        self.forward_controller = wpimath.controller.PIDController(0.04, 0.001, 0) # 0.015
         # self.forward_controller.setSetpoint(14)
         # Z Speed Controller
         self.rotate_controller = wpimath.controller.PIDController(0.03, 0, 0)
@@ -85,8 +85,26 @@ class DriveToRightReef(commands2.Command):
                     target_angle = 60
                 case 7:
                     target_angle = 0
+                case 8:
+                    target_angle = -60
+                case 9:
+                    target_angle = -120
+                case 10:
+                    target_angle = -180
+                case 11:
+                    target_angle = 120
+                case 17:
+                    target_angle = -60
+                case 18:
+                    target_angle = 0
                 case 19:
-                    target_angle = 60
+                    target_angle = 60  # 60
+                case 20:
+                    target_angle = 120
+                case 21:
+                    target_angle = -180
+                case 22:
+                    target_angle = -120
                 case _:
                     target_angle = self.drive_sub.get_heading()
 

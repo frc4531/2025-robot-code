@@ -14,6 +14,7 @@ from wpimath.trajectory import TrajectoryConfig, TrajectoryGenerator
 from commands.climber_down import ClimberDown
 from commands.climber_up import ClimberUp
 from commands.drive_to_center_reef import DriveToCenterReef
+from commands.drive_to_coral_station import DriveToCoralStation
 from commands.drive_to_left_reef import DriveToLeftReef
 from commands.drive_to_right_reef import DriveToRightReef
 from commands.input_drive import InputDrive
@@ -235,16 +236,20 @@ class RobotContainer:
             SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kStoragePosSwingArm)
         )
         # Left Reef Align
-        commands2.button.JoystickButton(self.driver_controller, 3).onTrue(
+        commands2.button.JoystickButton(self.driver_controller, 3).whileTrue(
             DriveToLeftReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
         )
         # Center Reef Align
-        commands2.button.JoystickButton(self.driver_controller, 2).onTrue(
+        commands2.button.JoystickButton(self.driver_controller, 2).whileTrue(
             DriveToCenterReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
         )
         # Right Reef Align
         commands2.button.JoystickButton(self.driver_controller, 4).whileTrue(
             DriveToRightReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
+        )
+        # Coral Station Align
+        commands2.button.JoystickButton(self.driver_controller, 6).whileTrue(
+            DriveToCoralStation(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
         )
         # Climber Up
         commands2.button.JoystickButton(self.driver_controller, 5).whileTrue(
