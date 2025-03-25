@@ -19,6 +19,7 @@ from commands.drive_to_left_reef import DriveToLeftReef
 from commands.drive_to_right_reef import DriveToRightReef
 from commands.input_drive import InputDrive
 from commands.intake_algae import IntakeAlgae
+from commands.lift_stop import LiftStop
 from constants.position_constants import PositionConstants
 from commands.drive_command import DriveCommand
 from commands.intake_out import IntakeOut
@@ -250,6 +251,10 @@ class RobotContainer:
         # Coral Station Align
         commands2.button.JoystickButton(self.driver_controller, 6).whileTrue(
             DriveToCoralStation(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
+        )
+        # LIFT EMERGENCY STOP
+        commands2.button.JoystickButton(self.driver_controller, 9).whileTrue(
+            LiftStop(self.lift_subsystem)
         )
         # Climber Up
         commands2.button.JoystickButton(self.driver_controller, 5).whileTrue(
