@@ -17,7 +17,6 @@ class LiftToPos2(commands2.Command):
 
     def execute(self) -> None:
         self.lift_sub.left_pid_controller.setReference(self.target_position, rev.SparkBase.ControlType.kPosition)
-        self.lift_sub.right_pid_controller.setReference(self.target_position, rev.SparkBase.ControlType.kPosition)
 
     def isFinished(self) -> bool:
         return False

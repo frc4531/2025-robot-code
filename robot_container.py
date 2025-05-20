@@ -109,7 +109,10 @@ class RobotContainer:
             LiftDown(self.lift_subsystem)
         )
         commands2.button.JoystickButton(self.operator_controller, 7).whileTrue(
-            LiftToPos2(self.lift_subsystem, 0.5)
+            LiftToPos2(self.lift_subsystem, 33)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 8).whileTrue(
+            LiftToPos2(self.lift_subsystem, 15)
         )
 
         #commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
