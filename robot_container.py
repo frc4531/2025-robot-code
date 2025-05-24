@@ -108,12 +108,12 @@ class RobotContainer:
         commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
             LiftDown(self.lift_subsystem)
         )
-        commands2.button.JoystickButton(self.operator_controller, 7).whileTrue(
-            LiftToPos2(self.lift_subsystem, 33)
-        )
-        commands2.button.JoystickButton(self.operator_controller, 8).whileTrue(
-            LiftToPos2(self.lift_subsystem, 15)
-        )
+        # commands2.button.JoystickButton(self.operator_controller, 7).whileTrue(
+        #     LiftToPos2(self.lift_subsystem, 1)
+        # )
+        # commands2.button.JoystickButton(self.operator_controller, 8).whileTrue(
+        #     LiftToPos2(self.lift_subsystem, 15)
+        # )
 
         #commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
         #    SwingArmUp(self.swing_arm_subsystem)
@@ -141,10 +141,10 @@ class RobotContainer:
         commands2.button.JoystickButton(self.operator_controller, 5).whileTrue(
             IntakeOut(self.intake_subsystem)
         )
-        # Intake From Coral Station
-        # commands2.button.JoystickButton(self.operator_controller, 2).onTrue(
-        #     LiftToPosition(self.lift_subsystem, PositionConstants.kCoralIntakeLift)
-        # )
+        #Intake From Coral Station
+        commands2.button.JoystickButton(self.operator_controller, 2).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralIntakeLift)
+        )
         commands2.button.JoystickButton(self.operator_controller, 2).onTrue(
             WristToPosition(self.wrist_subsystem, PositionConstants.kCoralIntakeWrist)
         )
@@ -152,113 +152,113 @@ class RobotContainer:
             SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralIntakeSwingArm)
 
         )
-        # # Level 1 Coral Deposit
-        # commands2.button.JoystickButton(self.operator_controller, 13).onTrue(
-        #     LiftToPosition(self.lift_subsystem, PositionConstants.kCoralOneLift)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 13).onTrue(
-        #     WristToPosition(self.wrist_subsystem, PositionConstants.kCoralOneWrist)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 13).onTrue(
-        #     SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralOneSwingArm)
-        # )
-        # # Level 2 Coral Deposit
-        # commands2.button.JoystickButton(self.operator_controller, 12).onTrue(
-        #     LiftToPosition(self.lift_subsystem, PositionConstants.kCoralTwoLift)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 12).onTrue(
-        #     WristToPosition(self.wrist_subsystem, PositionConstants.kCoralTwoWrist)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 12).onTrue(
-        #     SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralTwoSwingArm)
-        # )
-        # # Level 3 Coral Deposit
-        # commands2.button.JoystickButton(self.operator_controller, 8).onTrue(
-        #     LiftToPosition(self.lift_subsystem, PositionConstants.kCoralThreeLift)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 8).onTrue(
-        #     WristToPosition(self.wrist_subsystem, PositionConstants.kCoralThreeWrist)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 8).onTrue(
-        #     SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralThreeSwingArm)
-        # )
-        # # Level 4 Deposit
-        # commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
-        #     LiftToPosition(self.lift_subsystem, PositionConstants.kCoralFourLift)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
-        #     WristToPosition(self.wrist_subsystem, PositionConstants.kCoralFourWrist)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
-        #     SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralFourSwingArm)
-        # )
-        # # Ground Algae
-        # commands2.button.JoystickButton(self.operator_controller, 9).onTrue(
-        #     LiftToPosition(self.lift_subsystem, PositionConstants.kAlgaeGroundLift)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 9).onTrue(
-        #     WristToPosition(self.wrist_subsystem, PositionConstants.kAlgaeGroundWrist)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 9).onTrue(
-        #     SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kAlgaeGroundSwingArm)
-        # )
-        # # Level 2 Algae
-        # commands2.button.JoystickButton(self.operator_controller, 10).onTrue(
-        #     LiftToPosition(self.lift_subsystem, PositionConstants.kAlgaeTwoLift)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 10).onTrue(
-        #     WristToPosition(self.wrist_subsystem, PositionConstants.kAlgaeTwoWrist)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 10).onTrue(
-        #     SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kAlgaeTwoSwingArm)
-        # )
-        # # Level 3 Algae
-        # commands2.button.JoystickButton(self.operator_controller, 11).onTrue(
-        #     LiftToPosition(self.lift_subsystem, PositionConstants.kAlgaeThreeLift)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 11).onTrue(
-        #     WristToPosition(self.wrist_subsystem, PositionConstants.kAlgaeThreeWrist)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 11).onTrue(
-        #     SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kAlgaeThreeSwingArm)
-        # )
-        # # Algae Processor
-        # commands2.button.JoystickButton(self.operator_controller, 4).onTrue(
-        #     LiftToPosition(self.lift_subsystem, PositionConstants.kAlgaeProcessorLift)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 4).onTrue(
-        #     WristToPosition(self.wrist_subsystem, PositionConstants.kAlgaeProcessorWrist)
-        # )
-        # commands2.button.JoystickButton(self.operator_controller, 4).onTrue(
-        #     SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kAlgaeProcessorSwingArm)
-        # )
-        # # START DRIVER BLOCK
-        # # Stowed Position
-        # commands2.button.JoystickButton(self.driver_controller, 1).onTrue(
-        #     LiftToPosition(self.lift_subsystem, PositionConstants.kStoragePosLift)
-        # )
-        # commands2.button.JoystickButton(self.driver_controller, 1).onTrue(
-        #     WristToPosition(self.wrist_subsystem, PositionConstants.kStoragePosWrist)
-        # )
-        # commands2.button.JoystickButton(self.driver_controller, 1).onTrue(
-        #     SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kStoragePosSwingArm)
-        # )
-        # # Left Reef Align
-        # commands2.button.JoystickButton(self.driver_controller, 3).whileTrue(
-        #     DriveToLeftReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
-        # )
-        # # Center Reef Align
-        # commands2.button.JoystickButton(self.driver_controller, 2).whileTrue(
-        #     DriveToCenterReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
-        # )
-        # # Right Reef Align
-        # commands2.button.JoystickButton(self.driver_controller, 4).whileTrue(
-        #     DriveToRightReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
-        # )
-        # # Coral Station Align
-        # commands2.button.JoystickButton(self.driver_controller, 6).whileTrue(
-        #     DriveToCoralStation(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
-        # )
+        # Level 1 Coral Deposit
+        commands2.button.JoystickButton(self.operator_controller, 13).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralOneLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 13).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralOneWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 13).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralOneSwingArm)
+        )
+        # Level 2 Coral Deposit
+        commands2.button.JoystickButton(self.operator_controller, 12).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralTwoLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 12).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralTwoWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 12).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralTwoSwingArm)
+        )
+        # Level 3 Coral Deposit
+        commands2.button.JoystickButton(self.operator_controller, 8).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralThreeLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 8).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralThreeWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 8).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralThreeSwingArm)
+        )
+        # Level 4 Deposit
+        commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralFourLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralFourWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 7).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralFourSwingArm)
+        )
+        # Ground Algae
+        commands2.button.JoystickButton(self.operator_controller, 9).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kAlgaeGroundLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 9).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kAlgaeGroundWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 9).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kAlgaeGroundSwingArm)
+        )
+        # Level 2 Algae
+        commands2.button.JoystickButton(self.operator_controller, 10).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kAlgaeTwoLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 10).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kAlgaeTwoWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 10).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kAlgaeTwoSwingArm)
+        )
+        # Level 3 Algae
+        commands2.button.JoystickButton(self.operator_controller, 11).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kAlgaeThreeLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 11).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kAlgaeThreeWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 11).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kAlgaeThreeSwingArm)
+        )
+        # Algae Processor
+        commands2.button.JoystickButton(self.operator_controller, 4).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kAlgaeProcessorLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 4).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kAlgaeProcessorWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 4).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kAlgaeProcessorSwingArm)
+        )
+        # START DRIVER BLOCK
+        # Stowed Position
+        commands2.button.JoystickButton(self.driver_controller, 1).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kStoragePosLift)
+        )
+        commands2.button.JoystickButton(self.driver_controller, 1).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kStoragePosWrist)
+        )
+        commands2.button.JoystickButton(self.driver_controller, 1).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kStoragePosSwingArm)
+        )
+        # Left Reef Align
+        commands2.button.JoystickButton(self.driver_controller, 3).whileTrue(
+            DriveToLeftReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
+        )
+        # Center Reef Align
+        commands2.button.JoystickButton(self.driver_controller, 2).whileTrue(
+            DriveToCenterReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
+        )
+        # Right Reef Align
+        commands2.button.JoystickButton(self.driver_controller, 4).whileTrue(
+            DriveToRightReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
+        )
+        # Coral Station Align
+        commands2.button.JoystickButton(self.driver_controller, 6).whileTrue(
+            DriveToCoralStation(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
+        )
         # LIFT EMERGENCY STOP
         commands2.button.JoystickButton(self.driver_controller, 9).whileTrue(
             LiftStop(self.lift_subsystem)

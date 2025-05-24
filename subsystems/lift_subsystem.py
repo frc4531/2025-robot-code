@@ -38,7 +38,7 @@ class LiftSubsystem(SubsystemBase):
         self.kI = 0
         self.kD = 0
         self.kF = 0
-        self.min_speed = -0.9
+        self.min_speed = -0.3
         self.max_speed = 0.9
 
         self.left_config.closedLoop.P(self.kP)
@@ -50,8 +50,8 @@ class LiftSubsystem(SubsystemBase):
 
         self.right_config.follow(1, True)
 
-        self.left_config.smartCurrentLimit(55)
-        self.right_config.smartCurrentLimit(55)
+        self.left_config.smartCurrentLimit(60)
+        self.right_config.smartCurrentLimit(60)
 
         self.left_config.setIdleMode(SparkBaseConfig.IdleMode.kBrake)
         self.right_config.setIdleMode(SparkBaseConfig.IdleMode.kBrake)
