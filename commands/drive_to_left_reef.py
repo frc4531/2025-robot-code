@@ -5,6 +5,7 @@ import ntcore
 import wpilib
 import wpimath.controller
 
+from constants import field_pos_constants
 from constants.swerve_constants import OIConstants
 from subsystems.drive_subsystem import DriveSubsystem
 from subsystems.vision_subsystem import VisionSubsystem
@@ -58,7 +59,7 @@ class DriveToLeftReef(commands2.Command):
         # self.is_april_tag_tracking.set(True)
 
     def execute(self) -> None:
-        if self.vision_sub.left_v_entry == 1:
+        if self.vision_sub.avg_v_entry == 1:
             pid_strafe_output = self.strafe_controller.calculate(self.vision_sub.avg_x_cord, self.strafe_set_point)
             pid_forward_output = (self.forward_controller.calculate(self.vision_sub.avg_y_cord, self.forward_set_point))
 
@@ -84,10 +85,12 @@ class DriveToLeftReef(commands2.Command):
                 case 6:
                     target_angle = 60
                 case 7:
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID7XLeft
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID7YLeft
                     target_angle = 0
                 case 8:
-                    self.strafe_set_point = 12.93
-                    self.forward_set_point = 4.8
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID8XLeft
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID8YLeft
                     target_angle = -60
                 case 9:
                     target_angle = -120
@@ -120,7 +123,7 @@ class DriveToLeftReef(commands2.Command):
             x_output = self.driver_controller.getX()
             z_output = self.driver_controller.getZ()
 
-        if self.vision_sub.left_v_entry == 1:
+        if self.vision_sub.avg_v_entry == 1:
             self.drive_sub.drive(
                 wpimath.applyDeadband(
                     x_output, OIConstants.kDriveDeadband

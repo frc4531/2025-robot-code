@@ -5,6 +5,7 @@ import ntcore
 import wpilib
 import wpimath.controller
 
+from constants import field_pos_constants
 from constants.swerve_constants import OIConstants
 from subsystems.drive_subsystem import DriveSubsystem
 from subsystems.vision_subsystem import VisionSubsystem
@@ -30,17 +31,17 @@ class DriveToRightReef(commands2.Command):
 
         self.max_rotate_speed = 0.5
 
-        self.strafe_set_point = -19.3
-        self.forward_set_point = 14
+        self.strafe_set_point = 0
+        self.forward_set_point = 0
 
         self.strafe_target_threshold = 0.1
         self.forward_target_threshold = 0.1
 
-        # Y Speed Controller
-        self.strafe_controller = wpimath.controller.PIDController(0.05, 0.001, 0) # 0.004, 0.03
-        # self.strafe_controller.setSetpoint(-18.6)
         # X Speed Controller
-        self.forward_controller = wpimath.controller.PIDController(0.04, 0.001, 0) # 0.015
+        self.strafe_controller = wpimath.controller.PIDController(4.5, 0.1, 0) # 0.004, 0.03
+        # self.strafe_controller.setSetpoint(-18.6)
+        # Y Speed Controller
+        self.forward_controller = wpimath.controller.PIDController(4.5, 0.1, 0) # 0.015
         # self.forward_controller.setSetpoint(14)
         # Z Speed Controller
         self.rotate_controller = wpimath.controller.PIDController(0.03, 0, 0)
@@ -58,9 +59,9 @@ class DriveToRightReef(commands2.Command):
         # self.is_april_tag_tracking.set(True)
 
     def execute(self) -> None:
-        if self.vision_sub.front_v_entry == 1:
-            pid_strafe_output = self.strafe_controller.calculate(self.vision_sub.front_x_entry, self.strafe_set_point)
-            pid_forward_output = self.forward_controller.calculate(self.vision_sub.front_a_entry, self.forward_set_point)
+        if self.vision_sub.avg_v_entry == 1:
+            pid_strafe_output = self.strafe_controller.calculate(self.vision_sub.avg_x_cord, self.strafe_set_point)
+            pid_forward_output = (self.forward_controller.calculate(self.vision_sub.avg_y_cord, self.forward_set_point))
 
             x_output = max(min(pid_strafe_output, self.max_strafe_speed), -self.max_strafe_speed)
             y_output = max(min(pid_forward_output, self.max_forward_speed), -self.max_forward_speed)
@@ -80,12 +81,16 @@ class DriveToRightReef(commands2.Command):
             # self.forward_entry.set(pid_forward_output)
 
             # START ROTATE BLOCK
-            match self.vision_sub.front_id_entry:
+            match self.vision_sub.left_id_entry:
                 case 6:
                     target_angle = 60
                 case 7:
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID7XRight
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID7YRight
                     target_angle = 0
                 case 8:
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID8XRight
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID8YRight
                     target_angle = -60
                 case 9:
                     target_angle = -120
@@ -98,7 +103,7 @@ class DriveToRightReef(commands2.Command):
                 case 18:
                     target_angle = 0
                 case 19:
-                    target_angle = 60  # 60
+                    target_angle = 60 #60
                 case 20:
                     target_angle = 120
                 case 21:
@@ -118,10 +123,10 @@ class DriveToRightReef(commands2.Command):
             x_output = self.driver_controller.getX()
             z_output = self.driver_controller.getZ()
 
-        if self.vision_sub.front_v_entry == 1:
+        if self.vision_sub.avg_v_entry == 1:
             self.drive_sub.drive(
                 wpimath.applyDeadband(
-                    -x_output, OIConstants.kDriveDeadband
+                    x_output, OIConstants.kDriveDeadband
                 ),
                 wpimath.applyDeadband(
                     y_output, OIConstants.kDriveDeadband
@@ -129,7 +134,7 @@ class DriveToRightReef(commands2.Command):
                 wpimath.applyDeadband(
                     z_output, OIConstants.kDriveDeadband
                 ),
-                True,
+                False,
                 False,
             )
         else:
@@ -147,7 +152,7 @@ class DriveToRightReef(commands2.Command):
                 -wpimath.applyDeadband(
                     self.driver_controller.getZ(), OIConstants.kDriveDeadband
                 ),
-                True,
+                False,
                 False,
             )
 

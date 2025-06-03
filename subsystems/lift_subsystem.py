@@ -37,14 +37,18 @@ class LiftSubsystem(SubsystemBase):
         self.kP = 22.5
         self.kI = 0
         self.kD = 0
-        self.kF = 0
-        self.min_speed = -0.3
+        self.kF = 1/6784
+        self.min_speed = -0.00005
         self.max_speed = 0.9
 
         self.left_config.closedLoop.P(self.kP)
         self.left_config.closedLoop.I(self.kI)
         self.left_config.closedLoop.D(self.kD)
+        self.left_config.closedLoop.velocityFF(self.kF)
         self.left_config.closedLoop.outputRange(self.min_speed, self.max_speed)
+
+        self.left_config.closedLoop.maxMotion.maxAcceleration(2000)
+        self.left_config.closedLoop.maxMotion.maxVelocity(3000)
 
         self.left_config.inverted(True)
 

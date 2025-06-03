@@ -45,6 +45,7 @@ class VisionSubsystem(SubsystemBase):
 
         self.avg_y_cord = 0
         self.avg_x_cord = 0
+        self.avg_v_entry = 0
 
         self.avg_y_cord_entry = vision_table.getFloatTopic("avg_y_cord").publish()
         self.avg_x_cord_entry = vision_table.getFloatTopic("avg_x_cord").publish()
@@ -68,15 +69,19 @@ class VisionSubsystem(SubsystemBase):
         if self.left_v_entry == 1 and self.right_v_entry == 1:
             self.avg_y_cord = (self.left_blue_pos[1] + self.right_blue_pos[1]) / 2
             self.avg_x_cord = (self.left_blue_pos[0] + self.right_blue_pos[0]) / 2
+            self.avg_v_entry = 1
         elif self.left_v_entry == 1 and self.right_v_entry == 0:
             self.avg_y_cord = self.left_blue_pos[1]
             self.avg_x_cord = self.left_blue_pos[0]
+            self.avg_v_entry = 1
         elif self.left_v_entry == 0 and self.right_v_entry == 1:
             self.avg_y_cord = self.right_blue_pos[1]
             self.avg_x_cord = self.right_blue_pos[0]
+            self.avg_v_entry = 1
         else:
             self.avg_y_cord = 0
             self.avg_x_cord = 0
+            self.avg_v_entry = 0
 
         self.avg_y_cord_entry.set(self.avg_y_cord)
         self.avg_x_cord_entry.set(self.avg_x_cord)

@@ -9,7 +9,7 @@ class WristToPosition(commands2.PIDCommand):
 
     def __init__(self, wrist_sub: WristSubsystem, target_position) -> None:
         super().__init__(
-            wpimath.controller.PIDController(1.5, 0, 0),
+            wpimath.controller.PIDController(3.5, 0, 0),
             # Close loop on absolute encoder
             lambda: wrist_sub.get_wrist_position(),
             # Set reference to target
