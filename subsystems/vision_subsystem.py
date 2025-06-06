@@ -46,9 +46,12 @@ class VisionSubsystem(SubsystemBase):
         self.avg_y_cord = 0
         self.avg_x_cord = 0
         self.avg_v_entry = 0
+        self.avg_id_entry = 0
 
         self.avg_y_cord_entry = vision_table.getFloatTopic("avg_y_cord").publish()
         self.avg_x_cord_entry = vision_table.getFloatTopic("avg_x_cord").publish()
+        self.avg_v_entry_publish = vision_table.getFloatTopic("avg_v_entry").publish()
+        self.avg_id_entry_publish = vision_table.getFloatTopic("avg_id_entry").publish()
 
     def periodic(self):
         self.left_x_entry = self.left_x_sub.get()
@@ -65,23 +68,29 @@ class VisionSubsystem(SubsystemBase):
         self.right_id_entry = self.right_id_sub.get()
         self.right_blue_pos = self.right_blue_pos_sub.get()
 
-        # Avg Pos Estimator
+        # Avg Info Estimator
         if self.left_v_entry == 1 and self.right_v_entry == 1:
             self.avg_y_cord = (self.left_blue_pos[1] + self.right_blue_pos[1]) / 2
             self.avg_x_cord = (self.left_blue_pos[0] + self.right_blue_pos[0]) / 2
             self.avg_v_entry = 1
+            self.avg_id_entry = self.left_id_entry
         elif self.left_v_entry == 1 and self.right_v_entry == 0:
             self.avg_y_cord = self.left_blue_pos[1]
             self.avg_x_cord = self.left_blue_pos[0]
             self.avg_v_entry = 1
+            self.avg_id_entry = self.left_id_entry
         elif self.left_v_entry == 0 and self.right_v_entry == 1:
             self.avg_y_cord = self.right_blue_pos[1]
             self.avg_x_cord = self.right_blue_pos[0]
             self.avg_v_entry = 1
+            self.avg_id_entry = self.right_id_entry
         else:
-            self.avg_y_cord = 0
-            self.avg_x_cord = 0
-            self.avg_v_entry = 0
+            self.avg_y_cord = -1
+            self.avg_x_cord = -1
+            self.avg_v_entry = -1
+            self.avg_id_entry = -1
 
         self.avg_y_cord_entry.set(self.avg_y_cord)
         self.avg_x_cord_entry.set(self.avg_x_cord)
+        self.avg_v_entry_publish.set(self.avg_v_entry)
+        self.avg_id_entry_publish.set(self.avg_id_entry)

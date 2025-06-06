@@ -38,10 +38,10 @@ class DriveToLeftReef(commands2.Command):
         self.forward_target_threshold = 0.1
 
         # X Speed Controller
-        self.strafe_controller = wpimath.controller.PIDController(4.5, 0.1, 0) # 0.004, 0.03
+        self.strafe_controller = wpimath.controller.PIDController(5.5, 0.1, 0) # 0.004, 0.03
         # self.strafe_controller.setSetpoint(-18.6)
         # Y Speed Controller
-        self.forward_controller = wpimath.controller.PIDController(4.5, 0.1, 0) # 0.015
+        self.forward_controller = wpimath.controller.PIDController(5.5, 0.1, 0) # 0.015
         # self.forward_controller.setSetpoint(14)
         # Z Speed Controller
         self.rotate_controller = wpimath.controller.PIDController(0.03, 0, 0)
@@ -83,6 +83,8 @@ class DriveToLeftReef(commands2.Command):
             # START ROTATE BLOCK
             match self.vision_sub.left_id_entry:
                 case 6:
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID6XLeft
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID6YLeft
                     target_angle = 60
                 case 7:
                     self.strafe_set_point = field_pos_constants.FieldConstants.kID7XLeft
@@ -93,22 +95,41 @@ class DriveToLeftReef(commands2.Command):
                     self.forward_set_point = field_pos_constants.FieldConstants.kID8YLeft
                     target_angle = -60
                 case 9:
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID9XLeft
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID9YLeft
                     target_angle = -120
                 case 10:
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID10XLeft
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID10YLeft
                     target_angle = -180
                 case 11:
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID11XLeft
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID11YLeft
                     target_angle = 120
+                # Blue Reef
                 case 17:
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID17XLeft
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID17YLeft
                     target_angle = -60
                 case 18:
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID18XLeft
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID18YLeft
                     target_angle = 0
                 case 19:
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID19XLeft
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID19YLeft
                     target_angle = 60 #60
                 case 20:
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID20XLeft
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID20YLeft
                     target_angle = 120
                 case 21:
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID21XLeft
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID21YLeft
                     target_angle = -180
                 case 22:
+                    self.strafe_set_point = field_pos_constants.FieldConstants.kID22XLeft
+                    self.forward_set_point = field_pos_constants.FieldConstants.kID22YLeft
                     target_angle = -120
                 case _:
                     target_angle = self.drive_sub.get_heading()
