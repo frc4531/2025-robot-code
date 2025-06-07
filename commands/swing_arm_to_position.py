@@ -9,7 +9,7 @@ class SwingArmToPosition(commands2.PIDCommand):
 
     def __init__(self, swing_arm_sub: SwingArmSubsystem, target_position) -> None:
         super().__init__(
-            wpimath.controller.PIDController(6, 0, 0),
+            wpimath.controller.PIDController(8.5, 0.1, 0),
             # Close loop on absolute encoder
             lambda: swing_arm_sub.get_swing_arm_position(),
             # Set reference to target

@@ -1,3 +1,16 @@
+class FieldPIDControl:
+    # Constants for all Forward PID controllers
+    kPForward = 5
+    kIForward = 0.1
+
+    kMaxForwardSpeed = 0.2
+
+    # Constants for all Strafe PID Controllers
+    kPStrafe = 5
+    kIStrafe = 0.1
+
+    kMaxStrafeSpeed = 0.2
+
 class FieldConstants:
     # ID 6
     kID6XLeft = 12.971
@@ -59,61 +72,61 @@ class FieldConstants:
     kID11YRight = 3.124
 
     #ID 17
-    kID17XLeft = 2
-    kID17YLeft = 3
+    kID17XLeft = 3.567
+    kID17YLeft = 3.450
 
-    kID17XCenter = 2
-    kID17YCenter = 3
+    kID17XCenter = 3.566
+    kID17YCenter = 3.289
 
-    kID17XRight = 2
-    kID17YRight = 3
+    kID17XRight = 3.569
+    kID17YRight = 3.113
 
     #ID 18
-    kID18XLeft = 2
-    kID18YLeft = 3
+    kID18XLeft = 3.151
+    kID18YLeft = 4.197
 
-    kID18XCenter = 2
-    kID18YCenter = 3
+    kID18XCenter = 3.148
+    kID18YCenter = 4.00
 
-    kID18XRight = 2
-    kID18YRight = 3
+    kID18XRight = 3.154
+    kID18YRight = 3.884
 
     #ID 19
-    kID19XLeft = 2
-    kID19YLeft = 3
+    kID19XLeft = 3.566
+    kID19YLeft = 4.909
 
-    kID19XCenter = 2
-    kID19YCenter = 3
+    kID19XCenter = 3.568
+    kID19YCenter = 4.710
 
-    kID19XRight = 2
-    kID19YRight = 3
+    kID19XRight = 3.57
+    kID19YRight = 4.53
 
     #ID 20
-    kID20XLeft = 2
-    kID20YLeft = 3
+    kID20XLeft = 4.378
+    kID20YLeft = 4.886
 
-    kID20XCenter = 2
-    kID20YCenter = 3
+    kID20XCenter = 4.385
+    kID20YCenter = 4.722
 
-    kID20XRight = 2
-    kID20YRight = 3
+    kID20XRight = 4.392
+    kID20YRight = 4.553
 
     #ID 21
-    kID21XLeft = 2
-    kID21YLeft = 3
+    kID21XLeft = 4.814
+    kID21YLeft = 4.179
 
-    kID21XCenter = 2
-    kID21YCenter = 3
+    kID21XCenter = 4.814
+    kID21YCenter = 4.016
 
-    kID21XRight = 2
-    kID21YRight = 3
+    kID21XRight = 4.82
+    kID21YRight = 3.85
 
     #ID 22
-    kID22XLeft = 2
-    kID22YLeft = 3
+    kID22XLeft = 4.401
+    kID22YLeft = 3.500
 
-    kID22XCenter = 2
-    kID22YCenter = 3
+    kID22XCenter = 4.395
+    kID22YCenter = 3.280
 
-    kID22XRight = 2
-    kID22YRight = 3
+    kID22XRight = 4.404
+    kID22YRight = 3.111

@@ -4,9 +4,9 @@ class PositionConstants:
     kStoragePosSwingArm = 0.18
     kStoragePosWrist = 0.45
     # Coral Intake Station
-    kCoralIntakeLift = 2.4
-    kCoralIntakeSwingArm = 0.15
-    kCoralIntakeWrist = 0.34
+    kCoralIntakeLift = 4 #2.4
+    kCoralIntakeSwingArm = 0.075 # check github for the old one
+    kCoralIntakeWrist = 0.15 # check github for the old one
     # Level One Coral
     kCoralOneLift = 3
     kCoralOneSwingArm = 0.244

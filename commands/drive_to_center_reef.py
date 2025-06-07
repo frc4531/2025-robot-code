@@ -23,11 +23,9 @@ class DriveToCenterReef(commands2.Command):
         self.driver_controller = stick
 
         # Constants
-        self.max_strafe_speed = 0.25
-        self.min_strafe_speed = 0.05
+        self.max_strafe_speed = field_pos_constants.FieldPIDControl.kMaxStrafeSpeed
 
-        self.max_forward_speed = 0.125
-        self.min_forward_speed = 0.05
+        self.max_forward_speed = field_pos_constants.FieldPIDControl.kMaxForwardSpeed
 
         self.max_rotate_speed = 0.5
 
@@ -38,10 +36,10 @@ class DriveToCenterReef(commands2.Command):
         self.forward_target_threshold = 0.1
 
         # X Speed Controller
-        self.strafe_controller = wpimath.controller.PIDController(5.5, 0.1, 0) # 0.004, 0.03
+        self.strafe_controller = wpimath.controller.PIDController(field_pos_constants.FieldPIDControl.kPStrafe, 0.1, 0) # 0.004, 0.03
         # self.strafe_controller.setSetpoint(-18.6)
         # Y Speed Controller
-        self.forward_controller = wpimath.controller.PIDController(5.5, 0.1, 0) # 0.015
+        self.forward_controller = wpimath.controller.PIDController(field_pos_constants.FieldPIDControl.kPForward, 0.1, 0) # 0.015
         # self.forward_controller.setSetpoint(14)
         # Z Speed Controller
         self.rotate_controller = wpimath.controller.PIDController(0.03, 0, 0)
@@ -81,7 +79,7 @@ class DriveToCenterReef(commands2.Command):
             # self.forward_entry.set(pid_forward_output)
 
             # START ROTATE BLOCK
-            match self.vision_sub.left_id_entry:
+            match self.vision_sub.avg_id_entry:
                 case 6:
                     self.strafe_set_point = field_pos_constants.FieldConstants.kID6XCenter
                     self.forward_set_point = field_pos_constants.FieldConstants.kID6YCenter
