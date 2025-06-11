@@ -16,7 +16,7 @@ class PositionConstants:
     kCoralTwoSwingArm = 0.52 - 0.333
     kCoralTwoWrist = 0.43
     # Level Three Coral
-    kCoralThreeLift = 17.6
+    kCoralThreeLift = 15.5
     kCoralThreeSwingArm = 0.52 - 0.333
     kCoralThreeWrist = 0.436
     # Level Four Coral

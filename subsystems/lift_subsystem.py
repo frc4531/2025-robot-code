@@ -37,7 +37,7 @@ class LiftSubsystem(SubsystemBase):
         self.kP = 22.5
         self.kI = 0
         self.kD = 0
-        self.kF = 1/6784
+        self.kF = 10/6784
         self.min_speed = -0.00005
         self.max_speed = 0.9
 
