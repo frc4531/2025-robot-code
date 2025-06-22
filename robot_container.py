@@ -19,6 +19,7 @@ from commands.drive_to_left_reef import DriveToLeftReef
 from commands.drive_to_right_reef import DriveToRightReef
 from commands.input_drive import InputDrive
 from commands.intake_algae import IntakeAlgae
+from commands.intake_in import IntakeIn
 from commands.lift_stop import LiftStop
 from commands.lift_to_position_2 import LiftToPos2
 from constants.position_constants import PositionConstants
@@ -103,10 +104,21 @@ class RobotContainer:
         #    SwingArmToPosition(self.swing_arm_subsystem, 0.8)
         #)
         commands2.button.JoystickButton(self.operator_controller, 1).whileTrue(
-            LiftUp(self.lift_subsystem)
+            IntakeIn(self.intake_subsystem)
         )
-        commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
-            LiftDown(self.lift_subsystem)
+        # commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
+        #     LiftDown(self.lift_subsystem)
+        # )
+        # Barge teehee
+        commands2.button.JoystickButton(self.operator_controller, 3).onTrue(
+            LiftToPosition(self.lift_subsystem, 37)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 3).onTrue(
+            WristToPosition(self.wrist_subsystem, 0.25)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 3).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralIntakeSwingArm)
+
         )
         # commands2.button.JoystickButton(self.operator_controller, 7).whileTrue(
         #     LiftToPos2(self.lift_subsystem, 1)
