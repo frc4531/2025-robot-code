@@ -17,6 +17,7 @@ from commands.drive_to_center_reef import DriveToCenterReef
 from commands.drive_to_coral_station import DriveToCoralStation
 from commands.drive_to_left_reef import DriveToLeftReef
 from commands.drive_to_right_reef import DriveToRightReef
+from commands.drive_turn_to_angle import DriveTurnToAngle
 from commands.input_drive import InputDrive
 from commands.intake_algae import IntakeAlgae
 from commands.lift_stop import LiftStop
@@ -80,11 +81,18 @@ class RobotContainer:
         self.chooser = wpilib.SendableChooser()
         self.do_nothing = "Do Nothing"
         self.drive_forward = "Drive Forward"
+        self.left_one_coral = "Left One Coral"
         self.mid_one_coral = "Middle One Coral"
+        self.right_one_coral = "Right One Coral"
 
-        self.chooser.setDefaultOption("Shoot 1 Only", self.do_nothing)
+        self.chooser.setDefaultOption("Drive Forward", self.drive_forward)
+        self.chooser.addOption("Do Nothing", self.do_nothing)
         self.chooser.addOption("Drive Forward", self.drive_forward)
+        self.chooser.addOption("Left One Coral", self.left_one_coral)
         self.chooser.addOption("Middle One Coral", self.mid_one_coral)
+        self.chooser.addOption("Right One Coral", self.right_one_coral)
+
+        wpilib.SmartDashboard.putData("Auto Chooser", self.chooser)
 
 
     def configure_button_bindings(self) -> None:
@@ -339,38 +347,32 @@ class RobotContainer:
         # )
 
         # Start Auto Logic
-        return commands2.ParallelDeadlineGroup(
-            WaitCommand(1),
-            InputDrive(self.drive_subsystem, 0.4, 0, 0)
-        )
-
-        auto_selected = self.drive_forward# self.chooser.getSelected()
-
+        auto_selected = self.chooser.getSelected()
         match auto_selected:
-            case self.do_nothing:
-                return waitSeconds(1)
-            case self.drive_forward:
-                return commands2.SequentialCommandGroup(
-                    commands2.ParallelDeadlineGroup(
-                        WaitCommand(4),
-                        commands2.RunCommand(lambda: self.drive_subsystem.drive(0, 0.4, 0, True, False))
+                case self.do_nothing:
+                    return waitSeconds(1)
+                case self.drive_forward:
+                    return commands2.SequentialCommandGroup(
+                        commands2.ParallelDeadlineGroup(
+                            WaitCommand(1),
+                            InputDrive(self.drive_subsystem, 0.4, 0, 0)
+                        )
                     )
-                )
-            case self.mid_one_coral:
-                return commands2.SequentialCommandGroup(
-                    commands2.ParallelDeadlineGroup(
-                        WaitCommand(5),
-                        LiftToPosition(self.lift_subsystem, PositionConstants.kCoralOneLift),
-                        SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralOneSwingArm),
-                        WristToPosition(self.wrist_subsystem, PositionConstants.kCoralOneWrist)
-                    ),
-                    commands2.ParallelDeadlineGroup(
-                        WaitCommand(1),
-                        commands2.RunCommand(lambda: self.drive_subsystem.drive(0, -0.4, 0, True, False))
-                    ),
-                    commands2.ParallelDeadlineGroup(
-                        WaitCommand(1),
-                        IntakeOut(self.intake_subsystem)
-                    ),
-                )
+                case self.mid_one_coral:
+                    return commands2.SequentialCommandGroup(
+                        commands2.ParallelDeadlineGroup(
+                            WaitCommand(1),
+                            InputDrive(self.drive_subsystem, 0.4, 0, 0)
+                        ),
+                        commands2.ParallelDeadlineGroup(
+                            WaitCommand(5),
+                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralIntakeLift),
+                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralIntakeSwingArm),
+                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralIntakeWrist)
+                        ),
+                        commands2.ParallelDeadlineGroup(
+                            WaitCommand(1),
+                            IntakeOut(self.intake_subsystem)
+                        ),
+                    )
 

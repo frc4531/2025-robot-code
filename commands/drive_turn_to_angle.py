@@ -6,7 +6,7 @@ from subsystems.drive_subsystem import DriveSubsystem
 
 
 class DriveTurnToAngle(commands2.PIDCommand):
-    max_speed = 0.2
+    max_speed = 0.5
 
     def __init__(self, drive_sub: DriveSubsystem, target_angle: float) -> None:
         super().__init__(
