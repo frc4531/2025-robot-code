@@ -113,7 +113,7 @@ class FieldConstants:
 
     #ID 21
     kID21XLeft = 4.814
-    kID21YLeft = 4.179
+    kID21YLeft = 4.171
 
     kID21XCenter = 4.814
     kID21YCenter = 4.016
@@ -122,8 +122,8 @@ class FieldConstants:
     kID21YRight = 3.85
 
     #ID 22
-    kID22XLeft = 4.401
-    kID22YLeft = 3.500
+    kID22XLeft = 4.397
+    kID22YLeft = 3.435
 
     kID22XCenter = 4.395
     kID22YCenter = 3.280
