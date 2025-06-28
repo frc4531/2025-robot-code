@@ -99,7 +99,7 @@ class DriveToCenterReef(commands2.Command):
                 case 10:
                     self.strafe_set_point = field_pos_constants.FieldConstants.kID10XCenter
                     self.forward_set_point = field_pos_constants.FieldConstants.kID10YCenter
-                    target_angle = -180
+                    target_angle = self.drive_sub.get_heading()
                 case 11:
                     self.strafe_set_point = field_pos_constants.FieldConstants.kID11XCenter
                     self.forward_set_point = field_pos_constants.FieldConstants.kID11YCenter
@@ -125,7 +125,7 @@ class DriveToCenterReef(commands2.Command):
                 case 21:
                     self.strafe_set_point = field_pos_constants.FieldConstants.kID21XCenter
                     self.forward_set_point = field_pos_constants.FieldConstants.kID21YCenter
-                    target_angle = -180
+                    target_angle = self.drive_sub.get_heading()
                 case 22:
                     self.strafe_set_point = field_pos_constants.FieldConstants.kID22XCenter
                     self.forward_set_point = field_pos_constants.FieldConstants.kID22YCenter

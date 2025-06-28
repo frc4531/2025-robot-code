@@ -17,8 +17,10 @@ from commands.drive_to_center_reef import DriveToCenterReef
 from commands.drive_to_coral_station import DriveToCoralStation
 from commands.drive_to_left_reef import DriveToLeftReef
 from commands.drive_to_right_reef import DriveToRightReef
+from commands.drive_turn_around import DriveTurnAround
 from commands.drive_turn_to_angle import DriveTurnToAngle
 from commands.input_drive import InputDrive
+from commands.input_drive_field_centric import InputDriveFieldCentric
 from commands.intake_algae import IntakeAlgae
 from commands.intake_in import IntakeIn
 from commands.lift_stop import LiftStop
@@ -111,15 +113,22 @@ class RobotContainer:
         #commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
         #    SwingArmToPosition(self.swing_arm_subsystem, 0.8)
         #)
-        commands2.button.JoystickButton(self.operator_controller, 1).whileTrue(
-            IntakeIn(self.intake_subsystem)
+        commands2.button.JoystickButton(self.operator_controller, 1).onTrue(
+            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralOneAutoLift)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 1).onTrue(
+            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralOneAutoWrist)
+        )
+        commands2.button.JoystickButton(self.operator_controller, 1).onTrue(
+            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralOneAutoSwingArm)
+
         )
         # commands2.button.JoystickButton(self.operator_controller, 3).whileTrue(
         #     LiftDown(self.lift_subsystem)
         # )
         # Barge teehee
         commands2.button.JoystickButton(self.operator_controller, 3).onTrue(
-            LiftToPosition(self.lift_subsystem, 37)
+            LiftToPosition(self.lift_subsystem, 35)
         )
         commands2.button.JoystickButton(self.operator_controller, 3).onTrue(
             WristToPosition(self.wrist_subsystem, 0.25)
@@ -373,7 +382,7 @@ class RobotContainer:
                 case self.left_one_coral:
                     return commands2.SequentialCommandGroup(
                         commands2.ParallelDeadlineGroup(
-                            WaitCommand(1.2),
+                            WaitCommand(1.1),
                             InputDrive(self.drive_subsystem, 0.3, 0, 0)
                         ),
                         commands2.ParallelDeadlineGroup(
@@ -382,43 +391,66 @@ class RobotContainer:
                         ),
                         commands2.ParallelDeadlineGroup(
                             WaitCommand(1.2),
-                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralOneLift),
-                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralOneSwingArm),
-                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralOneWrist),
-                            InputDrive(self.drive_subsystem, -0.2, 0, 0)
+                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralTwoLift),
+                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralTwoSwingArm),
+                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralTwoWrist),
+                            DriveToLeftReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
                         ),
                         commands2.ParallelDeadlineGroup(
                             WaitCommand(1),
-                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralOneLift),
-                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralOneSwingArm),
-                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralOneWrist),
+                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralTwoLift),
+                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralTwoSwingArm),
+                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralTwoWrist),
+                        ),
+                        commands2.ParallelDeadlineGroup(
+                            WaitCommand(1),
+                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralTwoLift),
+                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralTwoSwingArm),
+                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralTwoWrist),
                             IntakeOut(self.intake_subsystem)
+                        ),
+                        commands2.ParallelDeadlineGroup(
+                            WaitCommand(0.5),
+                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralTwoLift),
+                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralTwoSwingArm),
+                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralTwoWrist),
+                            InputDrive(self.drive_subsystem, 0.2, 0, 0)
                         )
                     )
                 case self.mid_one_coral:
                     return commands2.SequentialCommandGroup(
                         commands2.ParallelDeadlineGroup(
-                            WaitCommand(1),
-                            InputDrive(self.drive_subsystem, 0.4, 0, 0)
+                            DriveTurnAround(self.drive_subsystem, -175)
                         ),
                         commands2.ParallelDeadlineGroup(
-                            WaitCommand(3),
-                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralIntakeLift),
-                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralIntakeSwingArm),
-                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralIntakeWrist)
+                            WaitCommand(4),
+                            DriveToLeftReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller),
+                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralFourLift),
+                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralFourSwingArm),
+                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralFourWrist)
                         ),
                         commands2.ParallelDeadlineGroup(
                             WaitCommand(1),
+                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralFourLift),
+                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralFourSwingArm),
+                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralFourWrist)
+                        ),
+                        commands2.ParallelDeadlineGroup(
+                            WaitCommand(1.5),
                             IntakeOut(self.intake_subsystem),
-                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralIntakeLift),
-                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralIntakeSwingArm),
-                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralIntakeWrist)
+                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralFourLift),
+                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralFourSwingArm),
+                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralFourWrist)
+                        ),
+                        commands2.ParallelDeadlineGroup(
+                            WaitCommand(0.5),
+                            InputDrive(self.drive_subsystem, 0.2, 0, 0)
                         ),
                     )
                 case self.right_one_coral:
                     return commands2.SequentialCommandGroup(
                         commands2.ParallelDeadlineGroup(
-                            WaitCommand(1.25),
+                            WaitCommand(1.1),
                             InputDrive(self.drive_subsystem, 0.3, 0, 0)
                         ),
                         commands2.ParallelDeadlineGroup(
@@ -427,17 +459,29 @@ class RobotContainer:
                         ),
                         commands2.ParallelDeadlineGroup(
                             WaitCommand(1.2),
-                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralOneLift),
-                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralOneSwingArm),
-                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralOneWrist),
-                            InputDrive(self.drive_subsystem, -0.2, 0, 0)
+                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralTwoLift),
+                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralTwoSwingArm),
+                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralTwoWrist),
+                            DriveToLeftReef(self.drive_subsystem, self.vision_subsystem, self.driver_controller)
                         ),
                         commands2.ParallelDeadlineGroup(
                             WaitCommand(1),
-                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralOneLift),
-                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralOneSwingArm),
-                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralOneWrist),
+                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralTwoLift),
+                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralTwoSwingArm),
+                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralTwoWrist),
+                        ),
+                        commands2.ParallelDeadlineGroup(
+                            WaitCommand(1),
+                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralTwoLift),
+                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralTwoSwingArm),
+                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralTwoWrist),
                             IntakeOut(self.intake_subsystem)
+                        ),
+                        commands2.ParallelDeadlineGroup(
+                            WaitCommand(0.5),
+                            LiftToPosition(self.lift_subsystem, PositionConstants.kCoralTwoLift),
+                            SwingArmToPosition(self.swing_arm_subsystem, PositionConstants.kCoralTwoSwingArm),
+                            WristToPosition(self.wrist_subsystem, PositionConstants.kCoralTwoWrist),
+                            InputDrive(self.drive_subsystem, 0.2, 0, 0)
                         )
                     )
-

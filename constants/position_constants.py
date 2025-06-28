@@ -4,25 +4,29 @@ class PositionConstants:
     kStoragePosSwingArm = 0.18
     kStoragePosWrist = 0.45
     # Coral Intake Station
-    kCoralIntakeLift = 4 #2.4
+    kCoralIntakeLift = 2 #2.4
     kCoralIntakeSwingArm = 0.075 # check github for the old one
     kCoralIntakeWrist = 0.15 # check github for the old one
+    # Auto Level One Coral
+    kCoralOneAutoLift = 6.5
+    kCoralOneAutoSwingArm = 0.33
+    kCoralOneAutoWrist = 0.25
     # Level One Coral
     kCoralOneLift = 3
     kCoralOneSwingArm = 0.244
     kCoralOneWrist = 0.36
     # Level Two Coral
     kCoralTwoLift = 3
-    kCoralTwoSwingArm = 0.52 - 0.333
+    kCoralTwoSwingArm = 0.187
     kCoralTwoWrist = 0.43
     # Level Three Coral
     kCoralThreeLift = 15.5
-    kCoralThreeSwingArm = 0.52 - 0.333
+    kCoralThreeSwingArm = 0.187
     kCoralThreeWrist = 0.436
     # Level Four Coral
-    kCoralFourLift = 34
-    kCoralFourSwingArm = 0.55 - 0.333
-    kCoralFourWrist = 0.4
+    kCoralFourLift = 33
+    kCoralFourSwingArm = 0.145
+    kCoralFourWrist = 0.5
     # Ground Algae Pickup
     kAlgaeGroundLift = 3
     kAlgaeGroundSwingArm = 0.33

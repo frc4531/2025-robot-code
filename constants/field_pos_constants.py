@@ -1,12 +1,12 @@
 class FieldPIDControl:
     # Constants for all Forward PID controllers
-    kPForward = 5
+    kPForward = 2
     kIForward = 0.1
 
     kMaxForwardSpeed = 0.2
 
     # Constants for all Strafe PID Controllers
-    kPStrafe = 5
+    kPStrafe = 2
     kIStrafe = 0.1
 
     kMaxStrafeSpeed = 0.2
@@ -43,7 +43,7 @@ class FieldConstants:
 
     #ID 9
     kID9XLeft = 12.14
-    kID9YLeft = 4.94
+    kID9YLeft = 4.90
 
     kID9XCenter = 12.139
     kID9YCenter = 4.725
@@ -52,8 +52,8 @@ class FieldConstants:
     kID9YRight = 4.55
 
     #ID 10
-    kID10XLeft = 11.721
-    kID10YLeft = 4.178
+    kID10XLeft = 11.708
+    kID10YLeft = 4.121
 
     kID10XCenter = 11.722
     kID10YCenter = 3.979
@@ -62,8 +62,8 @@ class FieldConstants:
     kID10YRight = 3.827
 
     #ID 11
-    kID11XLeft = 12.134
-    kID11YLeft = 3.476
+    kID11XLeft = 12.137
+    kID11YLeft = 3.471
 
     kID11XCenter = 12.136
     kID11YCenter = 3.292

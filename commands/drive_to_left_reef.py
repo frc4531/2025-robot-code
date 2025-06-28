@@ -99,7 +99,7 @@ class DriveToLeftReef(commands2.Command):
                 case 10:
                     self.strafe_set_point = field_pos_constants.FieldConstants.kID10XLeft
                     self.forward_set_point = field_pos_constants.FieldConstants.kID10YLeft
-                    target_angle = -180
+                    target_angle = self.drive_sub.get_heading()
                 case 11:
                     self.strafe_set_point = field_pos_constants.FieldConstants.kID11XLeft
                     self.forward_set_point = field_pos_constants.FieldConstants.kID11YLeft
@@ -124,7 +124,7 @@ class DriveToLeftReef(commands2.Command):
                 case 21:
                     self.strafe_set_point = field_pos_constants.FieldConstants.kID21XLeft
                     self.forward_set_point = field_pos_constants.FieldConstants.kID21YLeft
-                    target_angle = -180
+                    target_angle = self.drive_sub.get_heading()
                 case 22:
                     self.strafe_set_point = field_pos_constants.FieldConstants.kID22XLeft
                     self.forward_set_point = field_pos_constants.FieldConstants.kID22YLeft
